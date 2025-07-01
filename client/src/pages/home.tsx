@@ -53,7 +53,7 @@ export default function Home() {
     if (currentMode === 'home') {
       const timer = setTimeout(() => {
         if (speak) {
-          speak('Pilih metode pembayaran. Ucapkan static, dynamic, atau tap untuk memilih mode pembayaran.');
+          speak('Pilih metode pembayaran. Ucapkan static, dynamic, tap, atau transaksi untuk melihat riwayat.');
         }
       }, 500);
       return () => clearTimeout(timer);
@@ -69,7 +69,9 @@ export default function Home() {
       case 'tap':
         return <TapPayment onBack={goHome} onPaymentSuccess={handlePaymentSuccess} />;
       case 'success':
-        return <SuccessScreen amount={paymentAmount} onBack={goHome} />;
+        return <SuccessScreen amount={paymentAmount} paymentMethod={currentPaymentMethod} onBack={goHome} />;
+      case 'transactions':
+        return <TransactionList onBack={goHome} />;
       default:
         return <HomeScreen />;
     }
@@ -80,7 +82,7 @@ export default function Home() {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText="Ucapkan: static, dynamic, atau tap"
+        instructionText="Ucapkan: static, dynamic, tap, atau transaksi"
       />
       
       <div className="text-center mb-3">
@@ -98,7 +100,10 @@ export default function Home() {
       {/* Payment Mode Buttons */}
       <div className="flex-1 flex flex-col space-y-2">
         <button
-          onClick={() => setCurrentMode('static')}
+          onClick={() => {
+            setCurrentPaymentMethod('static');
+            setCurrentMode('static');
+          }}
           className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -111,7 +116,10 @@ export default function Home() {
         </button>
 
         <button
-          onClick={() => setCurrentMode('dynamic')}
+          onClick={() => {
+            setCurrentPaymentMethod('dynamic');
+            setCurrentMode('dynamic');
+          }}
           className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
           <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
@@ -124,7 +132,10 @@ export default function Home() {
         </button>
 
         <button
-          onClick={() => setCurrentMode('tap')}
+          onClick={() => {
+            setCurrentPaymentMethod('tap');
+            setCurrentMode('tap');
+          }}
           className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
           <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -133,6 +144,19 @@ export default function Home() {
           <div className="text-left flex-1">
             <div className="font-medium text-sm">QRIS Tap</div>
             <div className="text-gray-400 text-xs">Pembayaran NFC</div>
+          </div>
+        </button>
+
+        <button
+          onClick={() => setCurrentMode('transactions')}
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
+        >
+          <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+            <Receipt className="text-white w-4 h-4" />
+          </div>
+          <div className="text-left flex-1">
+            <div className="font-medium text-sm">Riwayat Transaksi</div>
+            <div className="text-gray-400 text-xs">Lihat daftar transaksi</div>
           </div>
         </button>
       </div>

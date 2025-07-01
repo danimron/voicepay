@@ -21,11 +21,7 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
 
   const createTransactionMutation = useMutation({
     mutationFn: async (transaction: InsertTransaction) => {
-      return apiRequest({
-        url: "/api/transactions",
-        method: "POST",
-        body: transaction,
-      });
+      return apiRequest("POST", "/api/transactions", transaction);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
