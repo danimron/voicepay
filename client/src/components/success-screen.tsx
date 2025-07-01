@@ -144,28 +144,50 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
   const AnimatedSuccessIcon = () => (
     <div className="relative">
       <div 
-        className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 ${
+        className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-700 ${
           animationPhase >= 1 
             ? 'bg-green-500 scale-100 rotate-0' 
             : 'bg-gray-600 scale-75 rotate-45'
         }`}
         style={{
-          boxShadow: animationPhase >= 2 
-            ? '0 0 30px rgba(34, 197, 94, 0.5), 0 0 60px rgba(34, 197, 94, 0.3)' 
-            : 'none'
+          animation: animationPhase >= 2 ? 'success-glow 3s ease-in-out infinite' : 'none',
         }}
       >
         <Check 
-          className={`text-white transition-all duration-300 ${
-            animationPhase >= 1 ? 'w-8 h-8 opacity-100' : 'w-4 h-4 opacity-0'
+          className={`text-white transition-all duration-500 ${
+            animationPhase >= 1 ? 'w-10 h-10 opacity-100' : 'w-4 h-4 opacity-0'
           }`} 
         />
       </div>
       
-      {/* Ripple effect */}
+      {/* Enhanced ripple effects */}
       {animationPhase >= 2 && (
-        <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-ping opacity-75" />
+        <>
+          <div className="absolute inset-0 rounded-full border-3 border-green-400 animate-ping opacity-75" />
+          <div 
+            className="absolute inset-0 rounded-full border-2 border-green-300 animate-ping opacity-50"
+            style={{ animationDelay: '0.3s' }}
+          />
+          <div 
+            className="absolute inset-0 rounded-full border-1 border-green-200 animate-ping opacity-25"
+            style={{ animationDelay: '0.6s' }}
+          />
+        </>
       )}
+      
+      {/* Success burst particles around the icon */}
+      {animationPhase >= 3 && Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={`burst-${i}`}
+          className="absolute w-2 h-2 bg-green-300 rounded-full"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-40px)`,
+            animation: `celebration-sparkle 1s ease-out ${i * 0.1}s infinite`,
+          }}
+        />
+      ))}
     </div>
   );
 
@@ -173,11 +195,18 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
     <div 
       className={`text-center transition-all duration-700 ${
         animationPhase >= 3 
-          ? 'scale-110 text-yellow-300' 
-          : 'scale-100 text-white'
+          ? 'scale-110' 
+          : 'scale-100'
       }`}
     >
-      <span className="font-bold text-lg">{formatCurrency(amount)}</span>
+      <span 
+        className="font-bold text-xl"
+        style={{
+          animation: animationPhase >= 3 ? 'amount-highlight 2s ease-in-out infinite' : 'none',
+        }}
+      >
+        {formatCurrency(amount)}
+      </span>
     </div>
   );
 
