@@ -4,6 +4,7 @@ import { formatCurrency } from '@/lib/utils';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { useVibration, VIBRATION_PATTERNS } from '@/hooks/use-vibration';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { InsertTransaction } from "@shared/schema";
@@ -17,6 +18,7 @@ interface SuccessScreenProps {
 export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenProps) {
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
+  const { vibrate } = useVibration();
   const queryClient = useQueryClient();
 
   const createTransactionMutation = useMutation({
@@ -36,6 +38,9 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
       status: "success"
     });
 
+    // Immediate vibration for payment success
+    vibrate(VIBRATION_PATTERNS.payment);
+
     // Voice feedback for successful payment
     const timer = setTimeout(() => {
       if (speak) {
@@ -43,7 +48,7 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [amount, paymentMethod]);
+  }, [amount, paymentMethod, vibrate]);
 
   useEffect(() => {
     if (!transcript) return;
