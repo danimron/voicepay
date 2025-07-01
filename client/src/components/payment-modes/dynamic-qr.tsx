@@ -21,13 +21,12 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
     onPaymentSuccess(paymentAmount);
   }, [onPaymentSuccess, paymentAmount]);
 
-  const handleBack = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Small delay to prevent flickering
-    setTimeout(() => {
-      onBack();
-    }, 50);
+  const handleBack = useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    onBack();
   }, [onBack]);
 
   const generateQR = useCallback(() => {
@@ -45,6 +44,12 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   // Handle voice amount input and commands
   useEffect(() => {
     if (!transcript) return;
+    
+    // Voice command to go back
+    if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
+      handleBack();
+      return;
+    }
     
     if (phase === 'input') {
       const numbers = transcript.match(/\d+/g);
@@ -83,7 +88,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText={phase === 'input' ? "Ucapkan nominal atau 'buat QR'" : "Ucapkan: bayar"}
+        instructionText={phase === 'input' ? "Ucapkan nominal, 'buat QR', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       
       <div className="flex items-center justify-between mb-3">
@@ -112,7 +117,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
 
           {isListening && (
             <div className="text-center mb-2">
-              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal atau "buat QR"</p>
+              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal, "buat QR", atau "kembali"</p>
             </div>
           )}
 
@@ -155,7 +160,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
             <p className="text-gray-400 text-xs mb-2">Scan untuk membayar</p>
             
             {isListening && (
-              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" untuk simulasi</p>
+              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" atau "kembali"</p>
             )}
           </div>
 

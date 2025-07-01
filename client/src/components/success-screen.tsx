@@ -13,19 +13,20 @@ export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
   const { isListening, startListening, transcript } = useVoiceCommand();
 
   useEffect(() => {
-    // Auto return to home after 3 seconds
+    // Auto return to home after 5 seconds (longer delay)
     const timer = setTimeout(() => {
       onBack();
-    }, 3000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [onBack]);
 
   useEffect(() => {
-    if (transcript && (transcript.includes('home') || transcript.includes('menu') || transcript.includes('kembali'))) {
+    if (!transcript) return;
+    if (transcript.includes('home') || transcript.includes('menu') || transcript.includes('kembali')) {
       onBack();
     }
-  }, [transcript, onBack]);
+  }, [transcript]);
 
   return (
     <div className="flex flex-col h-full text-center relative">

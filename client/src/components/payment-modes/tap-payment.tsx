@@ -19,13 +19,12 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
     onPaymentSuccess(paymentAmount);
   }, [onPaymentSuccess, paymentAmount]);
 
-  const handleBack = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Small delay to prevent flickering
-    setTimeout(() => {
-      onBack();
-    }, 50);
+  const handleBack = useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    onBack();
   }, [onBack]);
 
   // Handle voice amount input and commands
