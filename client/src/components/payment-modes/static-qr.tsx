@@ -3,6 +3,7 @@ import { ArrowLeft, Check } from 'lucide-react';
 import { useQRGenerator } from '@/hooks/use-qr-generator';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 
 interface StaticQRProps {
   onBack: () => void;
@@ -12,6 +13,7 @@ interface StaticQRProps {
 export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { generateStaticQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
+  const { speak } = useSpeechSynthesis();
 
   const handleSimulatePayment = useCallback(() => {
     // Simulate a random payment amount for static QR
@@ -29,7 +31,11 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
 
   useEffect(() => {
     generateStaticQR();
-  }, [generateStaticQR]);
+    // Voice feedback when Static QR loads
+    setTimeout(() => {
+      speak('Kode QR static telah ditampilkan. Siap menerima pembayaran. Ucapkan bayar untuk simulasi.');
+    }, 500);
+  }, [generateStaticQR, speak]);
 
   useEffect(() => {
     if (!transcript) return;

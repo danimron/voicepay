@@ -6,6 +6,7 @@ import { TapPayment } from '@/components/payment-modes/tap-payment';
 import { SuccessScreen } from '@/components/success-screen';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 import { QrCode, DollarSign, Wifi, Mic } from 'lucide-react';
 
 type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success';
@@ -14,6 +15,7 @@ export default function Home() {
   const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
+  const { speak } = useSpeechSynthesis();
 
   // Handle voice commands
   useEffect(() => {
@@ -38,6 +40,15 @@ export default function Home() {
     setCurrentMode('home');
     setPaymentAmount(0);
   };
+
+  // Voice feedback for home page
+  useEffect(() => {
+    if (currentMode === 'home') {
+      setTimeout(() => {
+        speak('Pilih metode pembayaran. Ucapkan static, dynamic, atau tap untuk memilih mode pembayaran.');
+      }, 500);
+    }
+  }, [currentMode, speak]);
 
   const renderContent = () => {
     switch (currentMode) {
