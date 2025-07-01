@@ -31,14 +31,32 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
 
   useEffect(() => {
     generateStaticQR();
-    // Voice feedback when Static QR loads
-    setTimeout(() => {
-      speak('Kode QR static telah ditampilkan. Siap menerima pembayaran. Ucapkan bayar untuk simulasi.');
+  }, [generateStaticQR]);
+
+  // Voice feedback when component loads (only once)
+  useEffect(() => {
+    let mounted = true;
+    const timer = setTimeout(() => {
+      if (mounted && speak) {
+        speak('Kode QR static telah ditampilkan. Siap menerima pembayaran. Ucapkan bayar untuk simulasi.');
+      }
     }, 500);
-  }, [generateStaticQR, speak]);
+    
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (!transcript) return;
+    
+    // Voice command to go back
+    if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
+      handleBack();
+      return;
+    }
+    
     if (transcript.includes('bayar')) {
       handleSimulatePayment();
     }
@@ -49,7 +67,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText="Ucapkan: bayar"
+        instructionText="Ucapkan: bayar atau kembali"
       />
       
       <div className="flex items-center justify-between mb-3">
@@ -68,7 +86,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
         </p>
         
         {isListening && (
-          <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" untuk simulasi</p>
+          <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" atau "kembali"</p>
         )}
       </div>
 
