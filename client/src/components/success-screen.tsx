@@ -16,10 +16,13 @@ export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
 
   useEffect(() => {
     // Voice feedback for successful payment
-    setTimeout(() => {
-      speak(`Pembayaran diterima sejumlah ${formatCurrency(amount)}. Terima kasih. Ucapkan kembali untuk ke menu utama.`);
+    const timer = setTimeout(() => {
+      if (speak) {
+        speak(`Pembayaran diterima sejumlah ${formatCurrency(amount)}. Terima kasih. Ucapkan kembali untuk ke menu utama.`);
+      }
     }, 500);
-  }, [amount, speak]);
+    return () => clearTimeout(timer);
+  }, [amount]);
 
   useEffect(() => {
     if (!transcript) return;

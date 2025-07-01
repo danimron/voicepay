@@ -45,7 +45,9 @@ export default function Home() {
   useEffect(() => {
     if (currentMode === 'home') {
       const timer = setTimeout(() => {
-        speak('Pilih metode pembayaran. Ucapkan static, dynamic, atau tap untuk memilih mode pembayaran.');
+        if (speak) {
+          speak('Pilih metode pembayaran. Ucapkan static, dynamic, atau tap untuk memilih mode pembayaran.');
+        }
       }, 500);
       return () => clearTimeout(timer);
     }

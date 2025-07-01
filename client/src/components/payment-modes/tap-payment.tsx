@@ -88,11 +88,14 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   // Initial voice feedback when component loads
   useEffect(() => {
     if (phase === 'input') {
-      setTimeout(() => {
-        speak('Masukkan nominal pembayaran atau aktifkan tap. Ucapkan nominal angka kemudian aktif NFC.');
+      const timer = setTimeout(() => {
+        if (speak) {
+          speak('Masukkan nominal pembayaran atau aktifkan tap. Ucapkan nominal angka kemudian aktif NFC.');
+        }
       }, 500);
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [phase]);
 
   return (
     <div className="flex flex-col h-full relative">

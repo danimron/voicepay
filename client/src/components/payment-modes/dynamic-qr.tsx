@@ -78,11 +78,14 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   // Initial voice feedback when component loads
   useEffect(() => {
     if (phase === 'input') {
-      setTimeout(() => {
-        speak('Masukkan nominal pembayaran atau buat QR. Ucapkan nominal angka kemudian buat QR.');
+      const timer = setTimeout(() => {
+        if (speak) {
+          speak('Masukkan nominal pembayaran atau buat QR. Ucapkan nominal angka kemudian buat QR.');
+        }
       }, 500);
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [phase]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
