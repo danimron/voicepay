@@ -44,11 +44,12 @@ export default function Home() {
   // Voice feedback for home page
   useEffect(() => {
     if (currentMode === 'home') {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         speak('Pilih metode pembayaran. Ucapkan static, dynamic, atau tap untuk memilih mode pembayaran.');
       }, 500);
+      return () => clearTimeout(timer);
     }
-  }, [currentMode, speak]);
+  }, [currentMode]);
 
   const renderContent = () => {
     switch (currentMode) {
