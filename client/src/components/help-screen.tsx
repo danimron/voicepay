@@ -9,7 +9,7 @@ interface HelpScreenProps {
 }
 
 export function HelpScreen({ onBack }: HelpScreenProps) {
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
 
   useEffect(() => {

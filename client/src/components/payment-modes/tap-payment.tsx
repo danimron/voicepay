@@ -15,7 +15,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [phase, setPhase] = useState<'input' | 'waiting'>('input');
   const [amount, setAmount] = useState('');
   const [paymentAmount, setPaymentAmount] = useState(0);
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
   const { vibrate } = useVibration();
 

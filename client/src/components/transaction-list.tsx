@@ -15,7 +15,7 @@ interface TransactionListProps {
 }
 
 export function TransactionList({ onBack }: TransactionListProps) {
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
 
   const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
@@ -91,7 +91,8 @@ export function TransactionList({ onBack }: TransactionListProps) {
         <h1 className="text-xs font-semibold text-white">Transaksi</h1>
         <VoiceIndicator 
           isListening={isListening} 
-          onClick={startListening}
+          onStartListening={startListening}
+          onStopListening={stopListening}
           showInstructions={false}
         />
       </div>
