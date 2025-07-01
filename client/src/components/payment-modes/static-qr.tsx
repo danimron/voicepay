@@ -13,7 +13,7 @@ interface StaticQRProps {
 export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { generateStaticQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
-  const { speak } = useSpeechSynthesis();
+  const { speak, stop } = useSpeechSynthesis();
 
   const handleSimulatePayment = useCallback(() => {
     // Simulate a random payment amount for static QR
@@ -26,12 +26,15 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
       e.preventDefault();
       e.stopPropagation();
     }
+    // Stop any ongoing speech
+    stop();
+    // Navigate back immediately
     onBack();
-  }, [onBack]);
+  }, [onBack, stop]);
 
   useEffect(() => {
     generateStaticQR();
-  }, [generateStaticQR]);
+  }, []);
 
   // Voice feedback when component loads (only once)
   useEffect(() => {
@@ -53,14 +56,21 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     
     // Voice command to go back
     if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
-      handleBack();
+      onBack();
       return;
     }
     
     if (transcript.includes('bayar')) {
       handleSimulatePayment();
     }
-  }, [transcript]);
+  }, [transcript, onBack, handleSimulatePayment]);
+
+  // Cleanup effect to stop speech and clear any timers on unmount
+  useEffect(() => {
+    return () => {
+      stop();
+    };
+  }, [stop]);
 
   return (
     <div className="flex flex-col h-full text-center relative">
