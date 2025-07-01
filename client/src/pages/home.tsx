@@ -4,6 +4,7 @@ import { StaticQR } from '@/components/payment-modes/static-qr';
 import { DynamicQR } from '@/components/payment-modes/dynamic-qr';
 import { TapPayment } from '@/components/payment-modes/tap-payment';
 import { SuccessScreen } from '@/components/success-screen';
+import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { QrCode, DollarSign, Wifi, Mic } from 'lucide-react';
 
@@ -54,30 +55,33 @@ export default function Home() {
   };
 
   const HomeScreen = () => (
-    <div className="flex flex-col h-full">
-      <div className="text-center mb-4">
-        <h1 className="text-white text-lg font-bold mb-1">SmartPay</h1>
+    <div className="flex flex-col h-full relative">
+      <VoiceIndicator 
+        isListening={isListening}
+        onClick={startListening}
+        instructionText="Ucapkan: static, dynamic, atau tap"
+      />
+      
+      <div className="text-center mb-3">
+        <h1 className="text-white text-base font-bold mb-1">SmartPay</h1>
         <p className="text-gray-400 text-xs">Pilih metode pembayaran</p>
       </div>
 
       {/* Voice Command Indicator */}
       {isListening && (
-        <div className="text-center mb-3">
-          <div className="voice-indicator inline-block">
-            <Mic className="text-blue-500 w-5 h-5" />
-          </div>
-          <p className="text-gray-300 text-xs mt-1">Mendengarkan...</p>
+        <div className="text-center mb-2">
+          <p className="text-blue-400 text-xs">🎤 Mendengarkan perintah...</p>
         </div>
       )}
 
       {/* Payment Mode Buttons */}
-      <div className="flex-1 flex flex-col space-y-3">
+      <div className="flex-1 flex flex-col space-y-2">
         <button
           onClick={() => setCurrentMode('static')}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-            <QrCode className="text-white w-5 h-5" />
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <QrCode className="text-white w-4 h-4" />
           </div>
           <div className="text-left flex-1">
             <div className="font-medium text-sm">QRIS Static</div>
@@ -87,10 +91,10 @@ export default function Home() {
 
         <button
           onClick={() => setCurrentMode('dynamic')}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
-            <DollarSign className="text-white w-5 h-5" />
+          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+            <DollarSign className="text-white w-4 h-4" />
           </div>
           <div className="text-left flex-1">
             <div className="font-medium text-sm">QRIS Dynamic</div>
@@ -100,10 +104,10 @@ export default function Home() {
 
         <button
           onClick={() => setCurrentMode('tap')}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
-            <Wifi className="text-white w-5 h-5" />
+          <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+            <Wifi className="text-white w-4 h-4" />
           </div>
           <div className="text-left flex-1">
             <div className="font-medium text-sm">QRIS Tap</div>
@@ -112,15 +116,10 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Voice Command Button */}
-      <button
-        onClick={startListening}
-        className={`bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full mt-3 flex items-center justify-center transition-all duration-200 ${
-          isListening ? 'button-pulse' : ''
-        }`}
-      >
-        <Mic className="w-5 h-5" />
-      </button>
+      {/* Voice Command Text Hint */}
+      <div className="text-center mt-2">
+        <p className="text-gray-500 text-xs">💬 Katakan "static", "dynamic", atau "tap"</p>
+      </div>
     </div>
   );
 

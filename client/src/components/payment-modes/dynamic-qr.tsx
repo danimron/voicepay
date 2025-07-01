@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Check, Mic } from 'lucide-react';
 import { useQRGenerator } from '@/hooks/use-qr-generator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { VoiceIndicator } from '@/components/voice-indicator';
 import { formatAmount, formatCurrency } from '@/lib/utils';
 
 interface DynamicQRProps {
@@ -16,15 +17,19 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
 
-  // Handle voice amount input
+  // Handle voice amount input and commands
   useEffect(() => {
-    if (transcript && phase === 'input') {
-      const numbers = transcript.match(/\d+/g);
-      if (numbers) {
-        const voiceAmount = numbers.join('');
-        if (voiceAmount.length > 0) {
-          setAmount(formatAmount(voiceAmount));
+    if (transcript) {
+      if (phase === 'input') {
+        const numbers = transcript.match(/\d+/g);
+        if (numbers) {
+          const voiceAmount = numbers.join('');
+          if (voiceAmount.length > 0) {
+            setAmount(formatAmount(voiceAmount));
+          }
         }
+      } else if (phase === 'display' && transcript.includes('bayar')) {
+        handleSimulatePayment();
       }
     }
   }, [transcript, phase]);
