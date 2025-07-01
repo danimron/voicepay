@@ -22,7 +22,10 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const handleBack = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onBack();
+    // Small delay to prevent flickering
+    setTimeout(() => {
+      onBack();
+    }, 50);
   }, [onBack]);
 
   useEffect(() => {
@@ -30,10 +33,11 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   }, [generateStaticQR]);
 
   useEffect(() => {
-    if (transcript && transcript.includes('bayar')) {
+    if (!transcript) return;
+    if (transcript.includes('bayar')) {
       handleSimulatePayment();
     }
-  }, [transcript, handleSimulatePayment]);
+  }, [transcript]);
 
   return (
     <div className="flex flex-col h-full text-center relative">

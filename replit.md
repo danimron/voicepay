@@ -94,6 +94,7 @@ This is a React-based smartwatch payment application designed for merchants to a
 ## Changelog
 - July 01, 2025: Initial setup
 - July 01, 2025: UI improvements - contained all elements within smartwatch screen, added voice indicators to all screens
+- July 01, 2025: Fixed back button flickering by optimizing useEffect dependencies and adding small delay
 
 ## User Preferences
 

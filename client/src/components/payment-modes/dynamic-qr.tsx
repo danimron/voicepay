@@ -24,7 +24,10 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const handleBack = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onBack();
+    // Small delay to prevent flickering
+    setTimeout(() => {
+      onBack();
+    }, 50);
   }, [onBack]);
 
   const generateQR = useCallback(() => {
@@ -41,24 +44,24 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
 
   // Handle voice amount input and commands
   useEffect(() => {
-    if (transcript) {
-      if (phase === 'input') {
-        const numbers = transcript.match(/\d+/g);
-        if (numbers) {
-          const voiceAmount = numbers.join('');
-          if (voiceAmount.length > 0) {
-            setAmount(formatAmount(voiceAmount));
-          }
+    if (!transcript) return;
+    
+    if (phase === 'input') {
+      const numbers = transcript.match(/\d+/g);
+      if (numbers) {
+        const voiceAmount = numbers.join('');
+        if (voiceAmount.length > 0) {
+          setAmount(formatAmount(voiceAmount));
         }
-        // Voice command to generate QR
-        if (transcript.includes('generate') || transcript.includes('buat') || transcript.includes('qr')) {
-          generateQR();
-        }
-      } else if (phase === 'display' && transcript.includes('bayar')) {
-        handleSimulatePayment();
       }
+      // Voice command to generate QR
+      if (transcript.includes('generate') || transcript.includes('buat') || transcript.includes('qr')) {
+        generateQR();
+      }
+    } else if (phase === 'display' && transcript.includes('bayar')) {
+      handleSimulatePayment();
     }
-  }, [transcript, phase, handleSimulatePayment, generateQR]);
+  }, [transcript]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');

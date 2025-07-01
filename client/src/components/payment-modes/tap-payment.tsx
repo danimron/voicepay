@@ -22,25 +22,28 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const handleBack = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onBack();
+    // Small delay to prevent flickering
+    setTimeout(() => {
+      onBack();
+    }, 50);
   }, [onBack]);
 
   // Handle voice amount input and commands
   useEffect(() => {
-    if (transcript) {
-      if (phase === 'input') {
-        const numbers = transcript.match(/\d+/g);
-        if (numbers) {
-          const voiceAmount = numbers.join('');
-          if (voiceAmount.length > 0) {
-            setAmount(formatAmount(voiceAmount));
-          }
+    if (!transcript) return;
+    
+    if (phase === 'input') {
+      const numbers = transcript.match(/\d+/g);
+      if (numbers) {
+        const voiceAmount = numbers.join('');
+        if (voiceAmount.length > 0) {
+          setAmount(formatAmount(voiceAmount));
         }
-      } else if (phase === 'waiting' && transcript.includes('bayar')) {
-        handleSimulatePayment();
       }
+    } else if (phase === 'waiting' && transcript.includes('bayar')) {
+      handleSimulatePayment();
     }
-  }, [transcript, phase]);
+  }, [transcript]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
