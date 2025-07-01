@@ -1,0 +1,65 @@
+Buatlah aplikasi smartwatch sederhana untuk merchant yang membantu menerima pembayaran dengan fitur-fitur berikut:
+
+Tampilan Home (Main Menu):
+
+Di awal tampilan home, tampilkan tiga mode pembayaran yang bisa dipilih, dengan dua cara untuk memilih: klik tombol atau perintah suara:
+
+QRIS Static:
+
+Menampilkan kode QRIS statis menggunakan data dummy.
+
+Tampilkan teks instruksi untuk mempersilakan orang scan kode QRIS dan melakukan pembayaran (misalnya, "Silakan scan QRIS untuk melakukan pembayaran").
+
+QRIS Dynamic (MPM):
+
+Ketika mode ini dipilih, aplikasi akan meminta pengguna untuk menyebutkan nominal pembayaran via voice command atau dengan memilih tombol untuk memasukkan nominal.
+
+Setelah nominal disebutkan atau dimasukkan, aplikasi akan generate kode QRIS dinamis yang mencakup informasi nominal yang harus dibayar.
+
+QRIS Tap:
+
+Saat mode ini dipilih, aplikasi akan meminta pengguna untuk menyebutkan nominal pembayaran menggunakan voice command atau dengan memilih tombol untuk memasukkan nominal.
+
+Setelah nominal disebutkan atau dimasukkan, aplikasi mengaktifkan mode menunggu pembayaran via NFC.
+
+Fokus pada Kesederhanaan: Desain antarmuka aplikasi harus simpel dan mudah dipahami, dengan tombol yang jelas dan mudah diakses. Gunakan desain yang intuitif agar tombol dan voice command bisa saling menggantikan.
+
+Voice Command:
+
+Aplikasi harus dapat menerima voice command untuk memilih mode pembayaran dan memasukkan nominal pembayaran.
+
+Gunakan dummy data untuk kode QRIS dan nominal pembayaran.
+
+Menampilkan Nominal:
+
+Pastikan nominal yang harus dibayar ditampilkan dengan jelas di layar pada mode QRIS Dynamic (MPM), baik melalui voice command maupun tombol.
+
+Simulasi Pembayaran Terbayar:
+
+Setelah pembayaran terbayar, tampilkan animasi kecil yang menunjukkan transaksi berhasil (misalnya, ceklis hijau atau animasi transaksi selesai).
+
+Mode QRIS Static:
+
+Menampilkan kode QRIS statis menggunakan data dummy.
+
+Tampilkan teks untuk mempersilakan orang scan QRIS dan melakukan pembayaran.
+
+Pilihan untuk memilih mode ini bisa dilakukan melalui tombol atau voice command.
+
+Mode QRIS Dynamic (MPM):
+
+Ketika mode ini dipilih, aplikasi akan meminta pengguna untuk menyebutkan nominal pembayaran menggunakan voice command atau dengan memilih tombol untuk memasukkan nominal.
+
+Setelah nominal disebutkan atau dimasukkan, aplikasi akan generate kode QRIS dinamis yang mencakup informasi nominal pembayaran yang disebutkan oleh pengguna.
+
+Mode QRIS Tap:
+
+Ketika mode QRIS Tap dipilih, aplikasi akan menunggu user untuk menyebutkan nominal pembayaran menggunakan voice command atau dengan memilih tombol untuk memasukkan nominal.
+
+Setelah nominal disebutkan atau dimasukkan, aplikasi mengaktifkan mode NFC untuk menerima pembayaran.
+
+Dummy NFC: Implementasikan mode menunggu pembayaran NFC menggunakan data tiruan (misalnya, pesan "Menunggu pembayaran NFC..." yang akan muncul saat NFC aktif).
+
+Penggunaan Dummy Data:
+
+Gunakan data dummy untuk kode QRIS dan nominal pembayaran. Pastikan aplikasi bisa menerima pembayaran secara visual meskipun menggunakan data tiruan.
