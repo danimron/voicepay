@@ -108,7 +108,8 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
     <div className="flex flex-col h-full relative">
       <VoiceIndicator 
         isListening={isListening}
-        onClick={startListening}
+        onStartListening={startListening}
+        onStopListening={stopListening}
         instructionText={phase === 'input' ? "Ucapkan nominal, 'aktif NFC', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       

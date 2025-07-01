@@ -33,7 +33,8 @@ export function HelpScreen({ onBack }: HelpScreenProps) {
     <div className="flex flex-col h-full relative">
       <VoiceIndicator 
         isListening={isListening}
-        onClick={startListening}
+        onStartListening={startListening}
+        onStopListening={stopListening}
         instructionText="Ucapkan: kembali"
       />
       

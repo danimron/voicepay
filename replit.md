@@ -107,6 +107,7 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Updated application branding - changed name from SmartPay to VoicePay, improved homepage description to "Terima Pembayaran dengan QRIS"
 - July 01, 2025: Added comprehensive help system - help icon in homepage header, complete FAQ screen with voice commands "bantuan", "help", "panduan"
 - July 01, 2025: Updated QRIS Static with real QR code image provided by user, replacing placeholder text with actual QR image
+- July 01, 2025: Enhanced voice indicator functionality - now shows glare effect only when listening, implemented toggle behavior (click to start/stop), updated all components to use new API
 
 ## User Preferences
 

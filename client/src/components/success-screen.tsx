@@ -16,7 +16,7 @@ interface SuccessScreenProps {
 }
 
 export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenProps) {
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
   const { vibrate } = useVibration();
   const queryClient = useQueryClient();
@@ -122,7 +122,8 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
     <div className="flex flex-col h-full text-center relative">
       <VoiceIndicator 
         isListening={isListening}
-        onClick={startListening}
+        onStartListening={startListening}
+        onStopListening={stopListening}
         instructionText="Ucapkan: kembali"
       />
       
