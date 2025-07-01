@@ -98,6 +98,7 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Added voice commands for NFC activation in QRIS Tap mode: "aktif NFC", "nfc", "tap", "activate"
 - July 01, 2025: Added comprehensive voice feedback using Web Speech API text-to-speech for all screens
 - July 01, 2025: Removed auto-redirect from success screen - users must manually return to menu
+- July 01, 2025: Fixed QRIS Static navigation bugs and infinite re-render loops by simplifying component structure and fixing useEffect dependencies
 
 ## User Preferences
 
