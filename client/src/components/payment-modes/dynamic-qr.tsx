@@ -4,6 +4,7 @@ import { useQRGenerator } from '@/hooks/use-qr-generator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { formatAmount, formatCurrency } from '@/lib/utils';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 
 interface DynamicQRProps {
   onBack: () => void;
@@ -16,6 +17,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
+  const { speak } = useSpeechSynthesis();
 
   const handleSimulatePayment = useCallback(() => {
     onPaymentSuccess(paymentAmount);
@@ -39,7 +41,12 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
     setPaymentAmount(numAmount);
     generateDynamicQR(numAmount);
     setPhase('display');
-  }, [amount, generateDynamicQR]);
+    
+    // Voice feedback when QR is generated
+    setTimeout(() => {
+      speak('Kode QR dynamic telah ditampilkan. Siap menerima pembayaran. Ucapkan bayar untuk simulasi.');
+    }, 500);
+  }, [amount, generateDynamicQR, speak]);
 
   // Handle voice amount input and commands
   useEffect(() => {
@@ -67,6 +74,15 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
       handleSimulatePayment();
     }
   }, [transcript]);
+
+  // Initial voice feedback when component loads
+  useEffect(() => {
+    if (phase === 'input') {
+      setTimeout(() => {
+        speak('Masukkan nominal pembayaran atau buat QR. Ucapkan nominal angka kemudian buat QR.');
+      }, 500);
+    }
+  }, []);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');

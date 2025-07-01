@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Mic, Wifi } from 'lucide-react';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { formatAmount, formatCurrency } from '@/lib/utils';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 
 interface TapPaymentProps {
   onBack: () => void;
