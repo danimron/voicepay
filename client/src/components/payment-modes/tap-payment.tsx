@@ -17,10 +17,13 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
+  const { vibrate } = useVibration();
 
   const handleSimulatePayment = useCallback(() => {
+    // Vibration feedback for tap payment
+    vibrate(VIBRATION_PATTERNS.tap);
     onPaymentSuccess(paymentAmount);
-  }, [onPaymentSuccess, paymentAmount]);
+  }, [onPaymentSuccess, paymentAmount, vibrate]);
 
   const handleBack = useCallback((e?: React.MouseEvent) => {
     if (e) {
@@ -79,6 +82,9 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
     const numAmount = parseInt(amount.replace(/\D/g, ''));
     setPaymentAmount(numAmount);
     setPhase('waiting');
+    
+    // Vibration feedback when NFC is activated
+    vibrate(VIBRATION_PATTERNS.notification);
     
     // Voice feedback when NFC is activated
     setTimeout(() => {

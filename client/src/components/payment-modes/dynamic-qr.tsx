@@ -5,6 +5,7 @@ import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { formatAmount, formatCurrency } from '@/lib/utils';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { useVibration, VIBRATION_PATTERNS } from '@/hooks/use-vibration';
 
 interface DynamicQRProps {
   onBack: () => void;
@@ -18,6 +19,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
+  const { vibrate } = useVibration();
 
   const handleSimulatePayment = useCallback(() => {
     onPaymentSuccess(paymentAmount);
