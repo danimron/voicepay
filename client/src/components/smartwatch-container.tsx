@@ -14,10 +14,10 @@ export function SmartwatchContainer({ children }: SmartwatchContainerProps) {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-      <div className="watch-container relative">
-        <div className="watch-content flex flex-col">
+      <div className="watch-container">
+        <div className="watch-content">
           {/* Status Bar */}
-          <div className="flex justify-between items-center px-3 py-2 text-xs text-gray-400">
+          <div className="flex justify-between items-center px-3 py-2 text-xs text-gray-400 flex-shrink-0">
             <span>{currentTime}</span>
             <div className="flex space-x-1">
               <Wifi className="w-3 h-3" />
@@ -26,7 +26,7 @@ export function SmartwatchContainer({ children }: SmartwatchContainerProps) {
           </div>
 
           {/* Main Content Area */}
-          <div className="flex-1 px-3 pb-3 overflow-hidden">
+          <div className="flex-1 px-3 pb-3 min-h-0">
             {children}
           </div>
         </div>

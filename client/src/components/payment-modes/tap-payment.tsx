@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Check, Mic, Wifi } from 'lucide-react';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { VoiceIndicator } from '@/components/voice-indicator';
 import { formatAmount, formatCurrency } from '@/lib/utils';
 
 interface TapPaymentProps {
@@ -14,15 +15,19 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
 
-  // Handle voice amount input
+  // Handle voice amount input and commands
   useEffect(() => {
-    if (transcript && phase === 'input') {
-      const numbers = transcript.match(/\d+/g);
-      if (numbers) {
-        const voiceAmount = numbers.join('');
-        if (voiceAmount.length > 0) {
-          setAmount(formatAmount(voiceAmount));
+    if (transcript) {
+      if (phase === 'input') {
+        const numbers = transcript.match(/\d+/g);
+        if (numbers) {
+          const voiceAmount = numbers.join('');
+          if (voiceAmount.length > 0) {
+            setAmount(formatAmount(voiceAmount));
+          }
         }
+      } else if (phase === 'waiting' && transcript.includes('bayar')) {
+        handleSimulatePayment();
       }
     }
   }, [transcript, phase]);
@@ -56,8 +61,14 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col h-full relative">
+      <VoiceIndicator 
+        isListening={isListening}
+        onClick={startListening}
+        instructionText={phase === 'input' ? "Ucapkan nominal" : "Ucapkan: bayar"}
+      />
+      
+      <div className="flex items-center justify-between mb-3">
         <button onClick={onBack} className="text-gray-400 hover:text-white">
           <ArrowLeft className="w-4 h-4" />
         </button>
@@ -67,21 +78,27 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
 
       {phase === 'input' ? (
         <div className="flex-1 flex flex-col">
-          <div className="text-center mb-4">
+          <div className="text-center mb-3">
             <p className="text-gray-300 text-xs mb-2">Masukkan nominal pembayaran</p>
-            <div className="bg-gray-800 p-3 rounded-xl border border-gray-600">
+            <div className="bg-gray-800 p-2.5 rounded-xl border border-gray-600">
               <span className="text-gray-400 text-xs">Rp</span>
               <input
                 type="text"
                 value={amount}
                 onChange={handleAmountInput}
                 placeholder="0"
-                className="bg-transparent text-white text-lg font-bold w-full text-center outline-none"
+                className="bg-transparent text-white text-base font-bold w-full text-center outline-none"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mb-4">
+          {isListening && (
+            <div className="text-center mb-2">
+              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal angka</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-2 mb-3">
             <button
               onClick={() => setQuickAmount('10000')}
               className="bg-gray-800 text-white text-xs p-2 rounded-lg border border-gray-600 hover:bg-gray-700"
@@ -102,38 +119,32 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
             </button>
           </div>
 
-          <div className="flex space-x-2">
-            <button
-              onClick={activateNFC}
-              className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-xl flex-1 text-sm transition-all duration-200"
-            >
-              Aktifkan NFC
-            </button>
-            <button
-              onClick={startListening}
-              className={`bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-xl transition-all duration-200 ${
-                isListening ? 'button-pulse' : ''
-              }`}
-            >
-              <Mic className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={activateNFC}
+            className="bg-green-600 hover:bg-green-700 text-white p-2.5 rounded-xl text-sm transition-all duration-200"
+          >
+            Aktifkan NFC
+          </button>
         </div>
       ) : (
         <div className="flex-1 flex flex-col text-center">
           <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="nfc-animation mb-4">
-              <Wifi className="text-green-500 w-16 h-16" />
+            <div className="nfc-animation mb-3">
+              <Wifi className="text-green-500 w-12 h-12" />
             </div>
             <p className="text-gray-300 text-xs mb-2">
               Nominal: <span className="text-white font-bold">{formatCurrency(paymentAmount)}</span>
             </p>
-            <p className="text-gray-400 text-xs">Menunggu pembayaran NFC...</p>
+            <p className="text-gray-400 text-xs mb-2">Menunggu pembayaran NFC...</p>
+            
+            {isListening && (
+              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" untuk simulasi</p>
+            )}
           </div>
 
           <button
             onClick={handleSimulatePayment}
-            className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-2xl transition-all duration-200 flex items-center justify-center"
+            className="bg-green-600 hover:bg-green-700 text-white p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center"
           >
             <Check className="w-4 h-4 mr-2" />
             Simulasi Bayar

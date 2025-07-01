@@ -92,7 +92,8 @@ This is a React-based smartwatch payment application designed for merchants to a
 - **Security**: HTTPS recommended for speech recognition features
 
 ## Changelog
-- July 01, 2025. Initial setup
+- July 01, 2025: Initial setup
+- July 01, 2025: UI improvements - contained all elements within smartwatch screen, added voice indicators to all screens
 
 ## User Preferences
 

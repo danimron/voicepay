@@ -64,8 +64,14 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col h-full relative">
+      <VoiceIndicator 
+        isListening={isListening}
+        onClick={startListening}
+        instructionText={phase === 'input' ? "Ucapkan nominal" : "Ucapkan: bayar"}
+      />
+      
+      <div className="flex items-center justify-between mb-3">
         <button onClick={onBack} className="text-gray-400 hover:text-white">
           <ArrowLeft className="w-4 h-4" />
         </button>
@@ -75,22 +81,28 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
 
       {phase === 'input' ? (
         <div className="flex-1 flex flex-col">
-          <div className="text-center mb-4">
+          <div className="text-center mb-3">
             <p className="text-gray-300 text-xs mb-2">Masukkan nominal pembayaran</p>
-            <div className="bg-gray-800 p-3 rounded-xl border border-gray-600">
+            <div className="bg-gray-800 p-2.5 rounded-xl border border-gray-600">
               <span className="text-gray-400 text-xs">Rp</span>
               <input
                 type="text"
                 value={amount}
                 onChange={handleAmountInput}
                 placeholder="0"
-                className="bg-transparent text-white text-lg font-bold w-full text-center outline-none"
+                className="bg-transparent text-white text-base font-bold w-full text-center outline-none"
               />
             </div>
           </div>
 
+          {isListening && (
+            <div className="text-center mb-2">
+              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal angka</p>
+            </div>
+          )}
+
           {/* Quick Amount Buttons */}
-          <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="grid grid-cols-3 gap-2 mb-3">
             <button
               onClick={() => setQuickAmount('10000')}
               className="bg-gray-800 text-white text-xs p-2 rounded-lg border border-gray-600 hover:bg-gray-700"
@@ -111,36 +123,30 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
             </button>
           </div>
 
-          <div className="flex space-x-2">
-            <button
-              onClick={generateQR}
-              className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl flex-1 text-sm transition-all duration-200"
-            >
-              Generate QR
-            </button>
-            <button
-              onClick={startListening}
-              className={`bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-xl transition-all duration-200 ${
-                isListening ? 'button-pulse' : ''
-              }`}
-            >
-              <Mic className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={generateQR}
+            className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl text-sm transition-all duration-200"
+          >
+            Generate QR
+          </button>
         </div>
       ) : (
         <div className="flex-1 flex flex-col text-center">
           <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="qr-code w-28 h-28 rounded-lg mb-3 border-2 border-gray-600"></div>
+            <div className="qr-code w-24 h-24 rounded-lg mb-2 border-2 border-gray-600"></div>
             <p className="text-gray-300 text-xs mb-2">
               Nominal: <span className="text-white font-bold">{formatCurrency(paymentAmount)}</span>
             </p>
-            <p className="text-gray-400 text-xs">Scan untuk membayar</p>
+            <p className="text-gray-400 text-xs mb-2">Scan untuk membayar</p>
+            
+            {isListening && (
+              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" untuk simulasi</p>
+            )}
           </div>
 
           <button
             onClick={handleSimulatePayment}
-            className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-2xl transition-all duration-200 flex items-center justify-center"
+            className="bg-green-600 hover:bg-green-700 text-white p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center"
           >
             <Check className="w-4 h-4 mr-2" />
             Simulasi Bayar
