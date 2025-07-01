@@ -98,20 +98,20 @@ export default function Home() {
       )}
 
       {/* Payment Mode Buttons */}
-      <div className="flex-1 flex flex-col space-y-2">
+      <div className="flex-1 flex flex-col space-y-1.5">
         <button
           onClick={() => {
             setCurrentPaymentMethod('static');
             setCurrentMode('static');
           }}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <QrCode className="text-white w-4 h-4" />
+          <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center">
+            <QrCode className="text-white w-3 h-3" />
           </div>
           <div className="text-left flex-1">
-            <div className="font-medium text-sm">QRIS Static</div>
-            <div className="text-gray-400 text-xs">Kode QR tetap</div>
+            <div className="font-medium text-xs">QRIS Static</div>
+            <div className="text-gray-400 text-[10px]">Kode QR tetap</div>
           </div>
         </button>
 
@@ -120,14 +120,14 @@ export default function Home() {
             setCurrentPaymentMethod('dynamic');
             setCurrentMode('dynamic');
           }}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-            <DollarSign className="text-white w-4 h-4" />
+          <div className="w-6 h-6 bg-orange-500 rounded-md flex items-center justify-center">
+            <DollarSign className="text-white w-3 h-3" />
           </div>
           <div className="text-left flex-1">
-            <div className="font-medium text-sm">QRIS Dynamic</div>
-            <div className="text-gray-400 text-xs">MPM dengan nominal</div>
+            <div className="font-medium text-xs">QRIS Dynamic</div>
+            <div className="text-gray-400 text-[10px]">MPM dengan nominal</div>
           </div>
         </button>
 
@@ -136,27 +136,27 @@ export default function Home() {
             setCurrentPaymentMethod('tap');
             setCurrentMode('tap');
           }}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-            <Wifi className="text-white w-4 h-4" />
+          <div className="w-6 h-6 bg-green-600 rounded-md flex items-center justify-center">
+            <Wifi className="text-white w-3 h-3" />
           </div>
           <div className="text-left flex-1">
-            <div className="font-medium text-sm">QRIS Tap</div>
-            <div className="text-gray-400 text-xs">Pembayaran NFC</div>
+            <div className="font-medium text-xs">QRIS Tap</div>
+            <div className="text-gray-400 text-[10px]">Pembayaran NFC</div>
           </div>
         </button>
 
         <button
           onClick={() => setCurrentMode('transactions')}
-          className="bg-gray-800 hover:bg-gray-700 text-white p-2.5 rounded-xl flex items-center space-x-2.5 transition-all duration-200 border border-gray-600"
+          className="bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-gray-600"
         >
-          <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-            <Receipt className="text-white w-4 h-4" />
+          <div className="w-6 h-6 bg-purple-600 rounded-md flex items-center justify-center">
+            <Receipt className="text-white w-3 h-3" />
           </div>
           <div className="text-left flex-1">
-            <div className="font-medium text-sm">Riwayat Transaksi</div>
-            <div className="text-gray-400 text-xs">Lihat daftar transaksi</div>
+            <div className="font-medium text-xs">Riwayat Transaksi</div>
+            <div className="text-gray-400 text-[10px]">Lihat daftar transaksi</div>
           </div>
         </button>
       </div>

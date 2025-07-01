@@ -99,6 +99,8 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Added comprehensive voice feedback using Web Speech API text-to-speech for all screens
 - July 01, 2025: Removed auto-redirect from success screen - users must manually return to menu
 - July 01, 2025: Fixed QRIS Static navigation bugs and infinite re-render loops by simplifying component structure and fixing useEffect dependencies
+- July 01, 2025: Added PostgreSQL database with transaction storage, API endpoints, and transaction list view with voice command "transaksi"
+- July 01, 2025: Fixed layout issues - made home screen buttons smaller and compact so all 4 buttons fit in screen, fixed transaction list double-container layout problem
 
 ## User Preferences
 
