@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQRGenerator } from '@/hooks/use-qr-generator';
@@ -16,9 +16,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { generateStaticQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak, stop } = useSpeechSynthesis();
-
-  // Generate QR code once when component mounts
-  const qrData = generateStaticQR();
+  const [qrData, setQrData] = useState('');
 
   const handleSimulatePayment = useCallback(() => {
     const randomAmount = Math.floor(Math.random() * 100000) + 10000;
@@ -30,13 +28,19 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     onBack();
   }, [onBack, stop]);
 
+  // Generate QR code once when component mounts
+  useEffect(() => {
+    const data = generateStaticQR();
+    setQrData(data);
+  }, [generateStaticQR]);
+
   // Voice feedback when component loads
   useEffect(() => {
     const timer = setTimeout(() => {
       speak('Kode QR static telah ditampilkan. Tunjukkan kepada pembeli atau ucapkan bayar untuk simulasi pembayaran.');
     }, 300);
     return () => clearTimeout(timer);
-  }, []); // Remove speak dependency to prevent infinite loop
+  }, []);
 
   // Handle voice commands
   useEffect(() => {
