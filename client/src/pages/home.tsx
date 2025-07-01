@@ -18,7 +18,7 @@ export default function Home() {
   const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
 
@@ -88,7 +88,8 @@ export default function Home() {
     <div className="flex flex-col h-full relative">
       <VoiceIndicator 
         isListening={isListening}
-        onClick={startListening}
+        onStartListening={startListening}
+        onStopListening={stopListening}
         instructionText="Ucapkan: static, dynamic, tap, transaksi, atau bantuan"
       />
       

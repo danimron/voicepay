@@ -14,7 +14,7 @@ interface StaticQRProps {
 
 export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const [qrData, setQrData] = useState('');
-  const { isListening, startListening, transcript } = useVoiceCommand();
+  const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak, stop } = useSpeechSynthesis();
 
   // Generate static QRIS code and voice feedback
@@ -99,7 +99,8 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
         {/* Voice Control */}
         <VoiceIndicator
           isListening={isListening}
-          onClick={startListening}
+          onStartListening={startListening}
+          onStopListening={stopListening}
           showInstructions={false}
         />
         

@@ -2,21 +2,31 @@ import { Mic } from 'lucide-react';
 
 interface VoiceIndicatorProps {
   isListening?: boolean;
-  onClick?: () => void;
+  onStartListening?: () => void;
+  onStopListening?: () => void;
   showInstructions?: boolean;
   instructionText?: string;
 }
 
 export function VoiceIndicator({ 
   isListening = false, 
-  onClick, 
+  onStartListening, 
+  onStopListening,
   showInstructions = true,
   instructionText = "Tekan mic atau ucapkan perintah"
 }: VoiceIndicatorProps) {
+  const handleClick = () => {
+    if (isListening && onStopListening) {
+      onStopListening();
+    } else if (!isListening && onStartListening) {
+      onStartListening();
+    }
+  };
+
   return (
-    <div className="voice-indicator-floating">
+    <div className={isListening ? "voice-indicator-floating" : "voice-indicator-normal"}>
       <button
-        onClick={onClick}
+        onClick={handleClick}
         className={`p-1 rounded-full transition-all duration-200 ${
           isListening ? 'bg-blue-500' : 'bg-blue-600 hover:bg-blue-700'
         }`}
