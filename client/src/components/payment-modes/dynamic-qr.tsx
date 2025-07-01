@@ -27,6 +27,18 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
     onBack();
   }, [onBack]);
 
+  const generateQR = useCallback(() => {
+    if (!amount || amount === '0') {
+      alert('Silakan masukkan nominal pembayaran');
+      return;
+    }
+
+    const numAmount = parseInt(amount.replace(/\D/g, ''));
+    setPaymentAmount(numAmount);
+    generateDynamicQR(numAmount);
+    setPhase('display');
+  }, [amount, generateDynamicQR]);
+
   // Handle voice amount input and commands
   useEffect(() => {
     if (transcript) {
@@ -38,11 +50,15 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
             setAmount(formatAmount(voiceAmount));
           }
         }
+        // Voice command to generate QR
+        if (transcript.includes('generate') || transcript.includes('buat') || transcript.includes('qr')) {
+          generateQR();
+        }
       } else if (phase === 'display' && transcript.includes('bayar')) {
         handleSimulatePayment();
       }
     }
-  }, [transcript, phase, handleSimulatePayment]);
+  }, [transcript, phase, handleSimulatePayment, generateQR]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
@@ -57,24 +73,14 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
     setAmount(formatAmount(value));
   };
 
-  const generateQR = () => {
-    if (!amount || amount === '0') {
-      alert('Silakan masukkan nominal pembayaran');
-      return;
-    }
 
-    const numAmount = parseInt(amount.replace(/\D/g, ''));
-    setPaymentAmount(numAmount);
-    generateDynamicQR(numAmount);
-    setPhase('display');
-  };
 
   return (
     <div className="flex flex-col h-full relative">
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText={phase === 'input' ? "Ucapkan nominal" : "Ucapkan: bayar"}
+        instructionText={phase === 'input' ? "Ucapkan nominal atau 'buat QR'" : "Ucapkan: bayar"}
       />
       
       <div className="flex items-center justify-between mb-3">
@@ -103,7 +109,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
 
           {isListening && (
             <div className="text-center mb-2">
-              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal angka</p>
+              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal atau "buat QR"</p>
             </div>
           )}
 
