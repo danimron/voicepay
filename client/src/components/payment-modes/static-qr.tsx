@@ -36,21 +36,23 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
       speak('Kode QR static telah ditampilkan. Tunjukkan kepada pembeli atau ucapkan bayar untuk simulasi pembayaran.');
     }, 300);
     return () => clearTimeout(timer);
-  }, [speak]);
+  }, []); // Remove speak dependency to prevent infinite loop
 
   // Handle voice commands
   useEffect(() => {
     if (!transcript) return;
     
     if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
-      handleBack();
+      stop();
+      onBack();
       return;
     }
     
     if (transcript.includes('bayar')) {
-      handleSimulatePayment();
+      const randomAmount = Math.floor(Math.random() * 100000) + 10000;
+      onPaymentSuccess(randomAmount);
     }
-  }, [transcript, handleBack, handleSimulatePayment]);
+  }, [transcript, stop, onBack, onPaymentSuccess]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
