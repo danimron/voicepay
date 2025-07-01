@@ -16,18 +16,20 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak, stop } = useSpeechSynthesis();
 
-  // Generate static QRIS code
+  // Generate static QRIS code and voice feedback
   useEffect(() => {
     const staticQRIS = 'QRIS.STATIC.ID.SMARTPAY.MERCHANT.001';
     setQrData(staticQRIS);
     
-    // Voice feedback
+    // Voice feedback with a delay
     const timer = setTimeout(() => {
-      speak('Kode QR static telah ditampilkan. Tunjukkan kepada pembeli atau ucapkan bayar untuk simulasi pembayaran.');
+      if (speak) {
+        speak('Kode QR static telah ditampilkan. Tunjukkan kepada pembeli atau ucapkan bayar untuk simulasi pembayaran.');
+      }
     }, 500);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, []); // No dependencies to prevent re-runs
 
   const handleSimulatePayment = useCallback(() => {
     const randomAmount = Math.floor(Math.random() * 100000) + 10000;
@@ -44,14 +46,16 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     if (!transcript) return;
     
     if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
-      handleBack();
+      stop();
+      onBack();
       return;
     }
     
     if (transcript.includes('bayar')) {
-      handleSimulatePayment();
+      const randomAmount = Math.floor(Math.random() * 100000) + 10000;
+      onPaymentSuccess(randomAmount);
     }
-  }, [transcript, handleBack, handleSimulatePayment]);
+  }, [transcript, stop, onBack, onPaymentSuccess]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
