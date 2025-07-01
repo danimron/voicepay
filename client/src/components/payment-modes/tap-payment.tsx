@@ -31,6 +31,12 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   useEffect(() => {
     if (!transcript) return;
     
+    // Voice command to go back
+    if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
+      handleBack();
+      return;
+    }
+    
     if (phase === 'input') {
       const numbers = transcript.match(/\d+/g);
       if (numbers) {
@@ -38,6 +44,10 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
         if (voiceAmount.length > 0) {
           setAmount(formatAmount(voiceAmount));
         }
+      }
+      // Voice command to activate NFC
+      if (transcript.includes('aktif') || transcript.includes('nfc') || transcript.includes('tap') || transcript.includes('activate')) {
+        activateNFC();
       }
     } else if (phase === 'waiting' && transcript.includes('bayar')) {
       handleSimulatePayment();
@@ -73,7 +83,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText={phase === 'input' ? "Ucapkan nominal" : "Ucapkan: bayar"}
+        instructionText={phase === 'input' ? "Ucapkan nominal, 'aktif NFC', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       
       <div className="flex items-center justify-between mb-3">
@@ -102,7 +112,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
 
           {isListening && (
             <div className="text-center mb-2">
-              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal angka</p>
+              <p className="text-blue-400 text-xs">🎤 Sebutkan nominal, "aktif NFC", atau "kembali"</p>
             </div>
           )}
 
@@ -146,7 +156,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
             <p className="text-gray-400 text-xs mb-2">Menunggu pembayaran NFC...</p>
             
             {isListening && (
-              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" untuk simulasi</p>
+              <p className="text-blue-400 text-xs">🎤 Ucapkan "bayar" atau "kembali"</p>
             )}
           </div>
 
