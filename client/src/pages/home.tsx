@@ -8,6 +8,7 @@ import { TransactionList } from '@/components/transaction-list';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { useIsSmartwatch } from '@/hooks/use-mobile';
 import { QrCode, DollarSign, Wifi, Mic, Receipt } from 'lucide-react';
 
 type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success' | 'transactions';
@@ -18,6 +19,7 @@ export default function Home() {
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
+  const isSmartwatch = useIsSmartwatch();
 
   // Handle voice commands
   useEffect(() => {
@@ -168,9 +170,19 @@ export default function Home() {
     </div>
   );
 
+  // Conditional rendering based on screen size
+  if (isSmartwatch) {
+    return (
+      <SmartwatchContainer>
+        {renderContent()}
+      </SmartwatchContainer>
+    );
+  }
+
+  // For larger screens (smartphones/tablets), show content directly
   return (
-    <SmartwatchContainer>
+    <div className="min-h-screen bg-black text-white p-4">
       {renderContent()}
-    </SmartwatchContainer>
+    </div>
   );
 }
