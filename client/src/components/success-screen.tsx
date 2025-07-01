@@ -17,16 +17,9 @@ export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
   useEffect(() => {
     // Voice feedback for successful payment
     setTimeout(() => {
-      speak(`Pembayaran diterima sejumlah ${formatCurrency(amount)}. Terima kasih.`);
+      speak(`Pembayaran diterima sejumlah ${formatCurrency(amount)}. Terima kasih. Ucapkan kembali untuk ke menu utama.`);
     }, 500);
-
-    // Auto return to home after 5 seconds (longer delay)
-    const timer = setTimeout(() => {
-      onBack();
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [amount, onBack, speak]);
+  }, [amount, speak]);
 
   useEffect(() => {
     if (!transcript) return;
@@ -40,7 +33,7 @@ export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText="Ucapkan: kembali"
+        instructionText="Ucapkan: kembali atau menu"
       />
       
       <div className="flex-1 flex flex-col items-center justify-center">
