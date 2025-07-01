@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { ArrowLeft, Check } from 'lucide-react';
 import { useQRGenerator } from '@/hooks/use-qr-generator';
 import { VoiceIndicator } from '@/components/voice-indicator';
@@ -13,11 +13,17 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { generateStaticQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
 
-  const handleSimulatePayment = () => {
+  const handleSimulatePayment = useCallback(() => {
     // Simulate a random payment amount for static QR
     const randomAmount = Math.floor(Math.random() * 100000) + 10000;
     onPaymentSuccess(randomAmount);
-  };
+  }, [onPaymentSuccess]);
+
+  const handleBack = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBack();
+  }, [onBack]);
 
   useEffect(() => {
     generateStaticQR();
@@ -38,7 +44,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
       />
       
       <div className="flex items-center justify-between mb-3">
-        <button onClick={onBack} className="text-gray-400 hover:text-white">
+        <button onClick={handleBack} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" />
         </button>
         <h2 className="text-white font-bold text-sm">QRIS Static</h2>

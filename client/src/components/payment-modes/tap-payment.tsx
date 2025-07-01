@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Check, Mic, Wifi } from 'lucide-react';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { VoiceIndicator } from '@/components/voice-indicator';
@@ -15,9 +15,15 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
 
-  const handleSimulatePayment = () => {
+  const handleSimulatePayment = useCallback(() => {
     onPaymentSuccess(paymentAmount);
-  };
+  }, [onPaymentSuccess, paymentAmount]);
+
+  const handleBack = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBack();
+  }, [onBack]);
 
   // Handle voice amount input and commands
   useEffect(() => {
@@ -69,7 +75,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
       />
       
       <div className="flex items-center justify-between mb-3">
-        <button onClick={onBack} className="text-gray-400 hover:text-white">
+        <button onClick={handleBack} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" />
         </button>
         <h2 className="text-white font-bold text-sm">QRIS Tap</h2>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Check, Mic } from 'lucide-react';
 import { useQRGenerator } from '@/hooks/use-qr-generator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
@@ -17,9 +17,15 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
 
-  const handleSimulatePayment = () => {
+  const handleSimulatePayment = useCallback(() => {
     onPaymentSuccess(paymentAmount);
-  };
+  }, [onPaymentSuccess, paymentAmount]);
+
+  const handleBack = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBack();
+  }, [onBack]);
 
   // Handle voice amount input and commands
   useEffect(() => {
@@ -72,7 +78,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
       />
       
       <div className="flex items-center justify-between mb-3">
-        <button onClick={onBack} className="text-gray-400 hover:text-white">
+        <button onClick={handleBack} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" />
         </button>
         <h2 className="text-white font-bold text-sm">QRIS Dynamic</h2>
