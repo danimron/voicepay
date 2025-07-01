@@ -5,6 +5,7 @@ import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { ArrowLeft } from 'lucide-react';
+import qrImagePath from '@assets/SAVE_20250701_171530_1751365050463.jpg';
 
 interface StaticQRProps {
   onBack: () => void;
@@ -74,14 +75,12 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
       {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 space-y-4">
         {/* QR Code Display */}
-        <div className="w-32 h-32 bg-white rounded-lg flex items-center justify-center border-2 border-gray-600">
-          <div className="text-center p-2">
-            <div className="text-xl mb-1">📱</div>
-            <div className="text-xs font-bold text-gray-800">QRIS</div>
-            <div className="text-xs text-gray-600 mt-1 break-all leading-tight">
-              {qrData || 'Loading...'}
-            </div>
-          </div>
+        <div className="w-32 h-32 bg-white rounded-lg flex items-center justify-center border-2 border-gray-600 p-2">
+          <img 
+            src={qrImagePath} 
+            alt="QRIS Static Code" 
+            className="w-full h-full object-contain rounded"
+          />
         </div>
 
         {/* Status */}
