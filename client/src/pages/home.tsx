@@ -5,13 +5,14 @@ import { DynamicQR } from '@/components/payment-modes/dynamic-qr';
 import { TapPayment } from '@/components/payment-modes/tap-payment';
 import { SuccessScreen } from '@/components/success-screen';
 import { TransactionList } from '@/components/transaction-list';
+import { HelpScreen } from '@/components/help-screen';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 import { useIsSmartwatch } from '@/hooks/use-mobile';
-import { QrCode, DollarSign, Wifi, Mic, Receipt } from 'lucide-react';
+import { QrCode, DollarSign, Wifi, Mic, Receipt, HelpCircle } from 'lucide-react';
 
-type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success' | 'transactions';
+type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success' | 'transactions' | 'help';
 
 export default function Home() {
   const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
@@ -36,6 +37,8 @@ export default function Home() {
         setCurrentMode('tap');
       } else if (command.includes('transaksi') || command.includes('riwayat') || command.includes('history')) {
         setCurrentMode('transactions');
+      } else if (command.includes('help') || command.includes('bantuan') || command.includes('panduan')) {
+        setCurrentMode('help');
       }
     }
   }, [transcript, currentMode]);
@@ -74,6 +77,8 @@ export default function Home() {
         return <SuccessScreen amount={paymentAmount} paymentMethod={currentPaymentMethod} onBack={goHome} />;
       case 'transactions':
         return <TransactionList onBack={goHome} />;
+      case 'help':
+        return <HelpScreen onBack={goHome} />;
       default:
         return <HomeScreen />;
     }
@@ -84,12 +89,21 @@ export default function Home() {
       <VoiceIndicator 
         isListening={isListening}
         onClick={startListening}
-        instructionText="Ucapkan: static, dynamic, tap, atau transaksi"
+        instructionText="Ucapkan: static, dynamic, tap, transaksi, atau bantuan"
       />
       
-      <div className="text-center mb-2">
+      <div className="text-center mb-2 relative">
         <h1 className="text-white text-sm font-bold mb-0.5">VoicePay</h1>
         <p className="text-gray-400 text-[10px]">Terima Pembayaran dengan QRIS</p>
+        
+        {/* Help Icon */}
+        <button
+          onClick={() => setCurrentMode('help')}
+          className="absolute top-0 right-2 w-6 h-6 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-all duration-200 border border-gray-500"
+          title="Bantuan"
+        >
+          <HelpCircle className="w-3 h-3 text-gray-300" />
+        </button>
       </div>
 
       {/* Voice Command Indicator */}
