@@ -4,17 +4,42 @@ import { formatCurrency } from '@/lib/utils';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import type { InsertTransaction } from "@shared/schema";
 
 interface SuccessScreenProps {
   amount: number;
+  paymentMethod: 'static' | 'dynamic' | 'tap';
   onBack: () => void;
 }
 
-export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
+export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenProps) {
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
+  const queryClient = useQueryClient();
+
+  const createTransactionMutation = useMutation({
+    mutationFn: async (transaction: InsertTransaction) => {
+      return apiRequest({
+        url: "/api/transactions",
+        method: "POST",
+        body: transaction,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
+    }
+  });
 
   useEffect(() => {
+    // Save transaction to database
+    createTransactionMutation.mutate({
+      amount: amount.toString(),
+      paymentMethod,
+      status: "success"
+    });
+
     // Voice feedback for successful payment
     const timer = setTimeout(() => {
       if (speak) {
@@ -22,7 +47,7 @@ export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [amount]);
+  }, [amount, paymentMethod]);
 
   useEffect(() => {
     if (!transcript) return;

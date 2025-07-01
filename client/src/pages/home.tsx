@@ -4,16 +4,18 @@ import { StaticQR } from '@/components/payment-modes/static-qr';
 import { DynamicQR } from '@/components/payment-modes/dynamic-qr';
 import { TapPayment } from '@/components/payment-modes/tap-payment';
 import { SuccessScreen } from '@/components/success-screen';
+import { TransactionList } from '@/components/transaction-list';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
-import { QrCode, DollarSign, Wifi, Mic } from 'lucide-react';
+import { QrCode, DollarSign, Wifi, Mic, Receipt } from 'lucide-react';
 
-type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success';
+type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success' | 'transactions';
 
 export default function Home() {
   const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
   const [paymentAmount, setPaymentAmount] = useState(0);
+  const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
   const { isListening, startListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
 
@@ -22,11 +24,16 @@ export default function Home() {
     if (transcript && currentMode === 'home') {
       const command = transcript.toLowerCase();
       if (command.includes('static') || command.includes('statik')) {
+        setCurrentPaymentMethod('static');
         setCurrentMode('static');
       } else if (command.includes('dynamic') || command.includes('dinamik')) {
+        setCurrentPaymentMethod('dynamic');
         setCurrentMode('dynamic');
       } else if (command.includes('tap') || command.includes('nfc')) {
+        setCurrentPaymentMethod('tap');
         setCurrentMode('tap');
+      } else if (command.includes('transaksi') || command.includes('riwayat') || command.includes('history')) {
+        setCurrentMode('transactions');
       }
     }
   }, [transcript, currentMode]);
