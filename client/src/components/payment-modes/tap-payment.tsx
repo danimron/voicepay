@@ -15,6 +15,10 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
 
+  const handleSimulatePayment = () => {
+    onPaymentSuccess(paymentAmount);
+  };
+
   // Handle voice amount input and commands
   useEffect(() => {
     if (transcript) {
@@ -54,10 +58,6 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
     const numAmount = parseInt(amount.replace(/\D/g, ''));
     setPaymentAmount(numAmount);
     setPhase('waiting');
-  };
-
-  const handleSimulatePayment = () => {
-    onPaymentSuccess(paymentAmount);
   };
 
   return (

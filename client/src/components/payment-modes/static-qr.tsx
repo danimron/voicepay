@@ -13,6 +13,12 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
   const { generateStaticQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
 
+  const handleSimulatePayment = () => {
+    // Simulate a random payment amount for static QR
+    const randomAmount = Math.floor(Math.random() * 100000) + 10000;
+    onPaymentSuccess(randomAmount);
+  };
+
   useEffect(() => {
     generateStaticQR();
   }, [generateStaticQR]);
@@ -21,13 +27,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     if (transcript && transcript.includes('bayar')) {
       handleSimulatePayment();
     }
-  }, [transcript]);
-
-  const handleSimulatePayment = () => {
-    // Simulate a random payment amount for static QR
-    const randomAmount = Math.floor(Math.random() * 100000) + 10000;
-    onPaymentSuccess(randomAmount);
-  };
+  }, [transcript, handleSimulatePayment]);
 
   return (
     <div className="flex flex-col h-full text-center relative">

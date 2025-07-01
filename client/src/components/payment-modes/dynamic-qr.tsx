@@ -17,6 +17,10 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, transcript } = useVoiceCommand();
 
+  const handleSimulatePayment = () => {
+    onPaymentSuccess(paymentAmount);
+  };
+
   // Handle voice amount input and commands
   useEffect(() => {
     if (transcript) {
@@ -32,7 +36,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
         handleSimulatePayment();
       }
     }
-  }, [transcript, phase]);
+  }, [transcript, phase, handleSimulatePayment]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
@@ -57,10 +61,6 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
     setPaymentAmount(numAmount);
     generateDynamicQR(numAmount);
     setPhase('display');
-  };
-
-  const handleSimulatePayment = () => {
-    onPaymentSuccess(paymentAmount);
   };
 
   return (
