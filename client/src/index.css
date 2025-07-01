@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Smartwatch specific colors */
+  --watch-bg: hsl(0, 0%, 7.1%);
+  --watch-surface: hsl(0, 0%, 11.8%);
+  --watch-primary: hsl(207, 90%, 54%);
+  --watch-success: hsl(122, 39%, 49%);
+  --watch-warning: hsl(36, 100%, 50%);
+  --watch-gray-400: hsl(0, 0%, 64%);
+  --watch-gray-300: hsl(0, 0%, 75%);
+  --watch-gray-600: hsl(0, 0%, 38%);
+  --watch-gray-700: hsl(0, 0%, 32%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-gray-900 text-foreground;
+  }
+}
+
+@layer components {
+  .watch-container {
+    width: 280px;
+    height: 320px;
+    border-radius: 50px;
+    border: 8px solid #2A2A2A;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    background: var(--watch-bg);
+  }
+  
+  .qr-code {
+    background: 
+      repeating-linear-gradient(0deg, #000 0px, #000 4px, #fff 4px, #fff 8px),
+      repeating-linear-gradient(90deg, #000 0px, #000 4px, #fff 4px, #fff 8px);
+  }
+}
+
+@layer utilities {
+  .button-pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  .success-animation {
+    animation: successPop 0.6s ease-out;
+  }
+  
+  .nfc-animation {
+    animation: nfcWave 2s infinite;
+  }
+  
+  .voice-indicator {
+    animation: voicePulse 1.5s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes successPop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes nfcWave {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+@keyframes voicePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}

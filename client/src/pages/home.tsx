@@ -1,0 +1,132 @@
+import { useState, useEffect } from 'react';
+import { SmartwatchContainer } from '@/components/smartwatch-container';
+import { StaticQR } from '@/components/payment-modes/static-qr';
+import { DynamicQR } from '@/components/payment-modes/dynamic-qr';
+import { TapPayment } from '@/components/payment-modes/tap-payment';
+import { SuccessScreen } from '@/components/success-screen';
+import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { QrCode, DollarSign, Wifi, Mic } from 'lucide-react';
+
+type PaymentMode = 'home' | 'static' | 'dynamic' | 'tap' | 'success';
+
+export default function Home() {
+  const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
+  const [paymentAmount, setPaymentAmount] = useState(0);
+  const { isListening, startListening, transcript } = useVoiceCommand();
+
+  // Handle voice commands
+  useEffect(() => {
+    if (transcript && currentMode === 'home') {
+      const command = transcript.toLowerCase();
+      if (command.includes('static') || command.includes('statik')) {
+        setCurrentMode('static');
+      } else if (command.includes('dynamic') || command.includes('dinamik')) {
+        setCurrentMode('dynamic');
+      } else if (command.includes('tap') || command.includes('nfc')) {
+        setCurrentMode('tap');
+      }
+    }
+  }, [transcript, currentMode]);
+
+  const handlePaymentSuccess = (amount: number) => {
+    setPaymentAmount(amount);
+    setCurrentMode('success');
+  };
+
+  const goHome = () => {
+    setCurrentMode('home');
+    setPaymentAmount(0);
+  };
+
+  const renderContent = () => {
+    switch (currentMode) {
+      case 'static':
+        return <StaticQR onBack={goHome} onPaymentSuccess={handlePaymentSuccess} />;
+      case 'dynamic':
+        return <DynamicQR onBack={goHome} onPaymentSuccess={handlePaymentSuccess} />;
+      case 'tap':
+        return <TapPayment onBack={goHome} onPaymentSuccess={handlePaymentSuccess} />;
+      case 'success':
+        return <SuccessScreen amount={paymentAmount} onBack={goHome} />;
+      default:
+        return <HomeScreen />;
+    }
+  };
+
+  const HomeScreen = () => (
+    <div className="flex flex-col h-full">
+      <div className="text-center mb-4">
+        <h1 className="text-white text-lg font-bold mb-1">SmartPay</h1>
+        <p className="text-gray-400 text-xs">Pilih metode pembayaran</p>
+      </div>
+
+      {/* Voice Command Indicator */}
+      {isListening && (
+        <div className="text-center mb-3">
+          <div className="voice-indicator inline-block">
+            <Mic className="text-blue-500 w-5 h-5" />
+          </div>
+          <p className="text-gray-300 text-xs mt-1">Mendengarkan...</p>
+        </div>
+      )}
+
+      {/* Payment Mode Buttons */}
+      <div className="flex-1 flex flex-col space-y-3">
+        <button
+          onClick={() => setCurrentMode('static')}
+          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+        >
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+            <QrCode className="text-white w-5 h-5" />
+          </div>
+          <div className="text-left flex-1">
+            <div className="font-medium text-sm">QRIS Static</div>
+            <div className="text-gray-400 text-xs">Kode QR tetap</div>
+          </div>
+        </button>
+
+        <button
+          onClick={() => setCurrentMode('dynamic')}
+          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+        >
+          <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
+            <DollarSign className="text-white w-5 h-5" />
+          </div>
+          <div className="text-left flex-1">
+            <div className="font-medium text-sm">QRIS Dynamic</div>
+            <div className="text-gray-400 text-xs">MPM dengan nominal</div>
+          </div>
+        </button>
+
+        <button
+          onClick={() => setCurrentMode('tap')}
+          className="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-2xl flex items-center space-x-3 transition-all duration-200 border border-gray-600"
+        >
+          <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
+            <Wifi className="text-white w-5 h-5" />
+          </div>
+          <div className="text-left flex-1">
+            <div className="font-medium text-sm">QRIS Tap</div>
+            <div className="text-gray-400 text-xs">Pembayaran NFC</div>
+          </div>
+        </button>
+      </div>
+
+      {/* Voice Command Button */}
+      <button
+        onClick={startListening}
+        className={`bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full mt-3 flex items-center justify-center transition-all duration-200 ${
+          isListening ? 'button-pulse' : ''
+        }`}
+      >
+        <Mic className="w-5 h-5" />
+      </button>
+    </div>
+  );
+
+  return (
+    <SmartwatchContainer>
+      {renderContent()}
+    </SmartwatchContainer>
+  );
+}
