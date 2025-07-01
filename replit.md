@@ -1,4 +1,4 @@
-# SmartWatch Payment App
+# VoicePay - Smartwatch Payment App
 
 ## Overview
 
@@ -101,6 +101,10 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Fixed QRIS Static navigation bugs and infinite re-render loops by simplifying component structure and fixing useEffect dependencies
 - July 01, 2025: Added PostgreSQL database with transaction storage, API endpoints, and transaction list view with voice command "transaksi"
 - July 01, 2025: Fixed layout issues - made home screen buttons smaller and compact so all 4 buttons fit in screen, fixed transaction list double-container layout problem
+- July 01, 2025: Added responsive design - smartwatch container only shows on larger screens, direct content display on actual smartwatch screens
+- July 01, 2025: Implemented interactive payment success celebration animations with multi-phase effects, confetti, sparkles, and animated success icons
+- July 01, 2025: Simplified success animations - removed background, kept animated check mark with glow effect, compact layout for better screen fit
+- July 01, 2025: Updated application branding - changed name from SmartPay to VoicePay, improved homepage description to "Terima Pembayaran dengan QRIS"
 
 ## User Preferences
 

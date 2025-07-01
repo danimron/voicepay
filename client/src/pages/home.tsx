@@ -88,8 +88,8 @@ export default function Home() {
       />
       
       <div className="text-center mb-2">
-        <h1 className="text-white text-sm font-bold mb-0.5">SmartPay</h1>
-        <p className="text-gray-400 text-[10px]">Pilih metode pembayaran</p>
+        <h1 className="text-white text-sm font-bold mb-0.5">VoicePay</h1>
+        <p className="text-gray-400 text-[10px]">Terima Pembayaran dengan QRIS</p>
       </div>
 
       {/* Voice Command Indicator */}
