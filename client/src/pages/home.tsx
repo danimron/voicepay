@@ -172,17 +172,18 @@ export default function Home() {
 
   // Conditional rendering based on screen size
   if (isSmartwatch) {
+    // For actual smartwatch (small screens), show content directly without container
     return (
-      <SmartwatchContainer>
+      <div className="min-h-screen bg-black text-white p-2">
         {renderContent()}
-      </SmartwatchContainer>
+      </div>
     );
   }
 
-  // For larger screens (smartphones/tablets), show content directly
+  // For larger screens (smartphones/tablets), show with smartwatch container for simulation
   return (
-    <div className="min-h-screen bg-black text-white p-4">
+    <SmartwatchContainer>
       {renderContent()}
-    </div>
+    </SmartwatchContainer>
   );
 }
