@@ -15,6 +15,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [amount, setAmount] = useState('');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, transcript } = useVoiceCommand();
+  const { speak } = useSpeechSynthesis();
 
   const handleSimulatePayment = useCallback(() => {
     onPaymentSuccess(paymentAmount);
@@ -77,7 +78,21 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
     const numAmount = parseInt(amount.replace(/\D/g, ''));
     setPaymentAmount(numAmount);
     setPhase('waiting');
+    
+    // Voice feedback when NFC is activated
+    setTimeout(() => {
+      speak('Mode QRIS tap telah aktif. Siap menerima pembayaran. Ucapkan bayar untuk simulasi.');
+    }, 500);
   };
+
+  // Initial voice feedback when component loads
+  useEffect(() => {
+    if (phase === 'input') {
+      setTimeout(() => {
+        speak('Masukkan nominal pembayaran atau aktifkan tap. Ucapkan nominal angka kemudian aktif NFC.');
+      }, 500);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-full relative">

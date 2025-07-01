@@ -3,6 +3,7 @@ import { Check, Home } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { VoiceIndicator } from '@/components/voice-indicator';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 
 interface SuccessScreenProps {
   amount: number;
@@ -11,15 +12,21 @@ interface SuccessScreenProps {
 
 export function SuccessScreen({ amount, onBack }: SuccessScreenProps) {
   const { isListening, startListening, transcript } = useVoiceCommand();
+  const { speak } = useSpeechSynthesis();
 
   useEffect(() => {
+    // Voice feedback for successful payment
+    setTimeout(() => {
+      speak(`Pembayaran diterima sejumlah ${formatCurrency(amount)}. Terima kasih.`);
+    }, 500);
+
     // Auto return to home after 5 seconds (longer delay)
     const timer = setTimeout(() => {
       onBack();
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [onBack]);
+  }, [amount, onBack, speak]);
 
   useEffect(() => {
     if (!transcript) return;
