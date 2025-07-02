@@ -9,8 +9,25 @@ export interface SpeechSynthesisHook {
 export function useSpeechSynthesis(): SpeechSynthesisHook {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
+  const [audioInitialized, setAudioInitialized] = useState(false);
 
   const isSupported = 'speechSynthesis' in window;
+
+  // Initialize audio context on first user interaction
+  const initializeAudio = useCallback(() => {
+    if (!isSupported || audioInitialized) return;
+
+    try {
+      // Speak a silent utterance to initialize the audio context
+      const utterance = new SpeechSynthesisUtterance('');
+      utterance.volume = 0;
+      window.speechSynthesis.speak(utterance);
+      setAudioInitialized(true);
+      console.log('Audio context initialized');
+    } catch (error) {
+      console.warn('Failed to initialize audio:', error);
+    }
+  }, [isSupported, audioInitialized]);
 
   // Load voices asynchronously
   useEffect(() => {
@@ -34,8 +51,30 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     };
   }, [isSupported]);
 
+  // Initialize audio on first user interaction
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      initializeAudio();
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, [initializeAudio]);
+
   const speak = useCallback((text: string) => {
     if (!isSupported) return;
+
+    // Initialize audio on first speak attempt if not already done
+    if (!audioInitialized) {
+      initializeAudio();
+    }
 
     try {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -57,15 +96,19 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
 
       utteranceRef.current = utterance;
       
-      // Simple delay to ensure previous speech finished
+      // Wait a bit longer for audio initialization if needed
+      const delay = audioInitialized ? 100 : 500;
       setTimeout(() => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
         window.speechSynthesis.speak(utterance);
-      }, 100);
+      }, delay);
       
     } catch (error) {
       console.error('Speech synthesis error:', error);
     }
-  }, [isSupported]);
+  }, [isSupported, audioInitialized, initializeAudio]);
 
   const stop = useCallback(() => {
     if (!isSupported) return;

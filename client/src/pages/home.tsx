@@ -7,6 +7,7 @@ import { SuccessScreen } from '@/components/success-screen';
 import { TransactionList } from '@/components/transaction-list';
 import { HelpScreen } from '@/components/help-screen';
 import { VoiceIndicator } from '@/components/voice-indicator';
+import { AudioInitButton } from '@/components/audio-init-button';
 import { useVoiceCommand } from '@/hooks/use-voice-command';
 import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
 import { useIsSmartwatch } from '@/hooks/use-mobile';
@@ -18,6 +19,7 @@ export default function Home() {
   const [currentMode, setCurrentMode] = useState<PaymentMode>('home');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
+  const [showAudioInit, setShowAudioInit] = useState(true);
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
   const { speak } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
@@ -185,12 +187,23 @@ export default function Home() {
     </div>
   );
 
+  const content = (
+    <>
+      {showAudioInit && currentMode === 'home' && (
+        <AudioInitButton 
+          onAudioInitialized={() => setShowAudioInit(false)}
+        />
+      )}
+      {renderContent()}
+    </>
+  );
+
   // Conditional rendering based on screen size
   if (isSmartwatch) {
     // For actual smartwatch (small screens), show content directly without container
     return (
       <div className="min-h-screen bg-black text-white p-2">
-        {renderContent()}
+        {content}
       </div>
     );
   }
@@ -198,7 +211,7 @@ export default function Home() {
   // For larger screens (smartphones/tablets), show with smartwatch container for simulation
   return (
     <SmartwatchContainer>
-      {renderContent()}
+      {content}
     </SmartwatchContainer>
   );
 }
