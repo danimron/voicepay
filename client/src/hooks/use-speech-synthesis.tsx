@@ -14,27 +14,33 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     if (!isSupported) return;
 
     try {
-      // Simple and direct approach
-      const utterance = new SpeechSynthesisUtterance(text);
+      // Cancel any current speech
+      window.speechSynthesis.cancel();
       
-      // Basic settings that work reliably across browsers
-      utterance.rate = 0.8;
-      utterance.pitch = 1;
-      utterance.volume = 0.8;
-      utterance.lang = 'en-US';
-      
-      // Simple error handling without recursion
-      utterance.onerror = () => {
-        // Silently fail - voice feedback is nice to have but not critical
-      };
+      // Small delay to ensure clean start
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Use Indonesian language like in original working version
+        utterance.lang = 'id-ID';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
 
-      utteranceRef.current = utterance;
-      
-      // Speak immediately without complex initialization
-      window.speechSynthesis.speak(utterance);
+        utterance.onstart = () => {
+          console.log('Voice feedback:', text);
+        };
+
+        utterance.onerror = (event) => {
+          console.warn('Voice feedback error:', event.error);
+        };
+
+        utteranceRef.current = utterance;
+        window.speechSynthesis.speak(utterance);
+      }, 100);
       
     } catch (error) {
-      // Silently fail - voice feedback is optional
+      console.warn('Voice feedback failed:', error);
     }
   }, [isSupported]);
 
