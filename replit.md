@@ -109,7 +109,7 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Updated QRIS Static with real QR code image provided by user, replacing placeholder text with actual QR image
 - July 01, 2025: Enhanced voice indicator functionality - now shows glare effect only when listening, implemented toggle behavior (click to start/stop), updated all components to use new API
 - July 02, 2025: Fixed voice feedback system - corrected useEffect dependencies for speak function across all components, simplified speech synthesis to avoid browser compatibility issues, removed problematic cancel() calls, switched to English for better reliability
-- July 02, 2025: Cleaned up voice feedback system - removed problematic cancel() calls that caused "canceled" errors, implemented silent error handling, simplified speech synthesis to just speak without interference
+- July 02, 2025: Added comprehensive voice debugging system - extensive logging to track voice availability, added test speech button in homepage (green mic icon), debugging why voice feedback not working despite 210 voices being available including 2 Indonesian voices
 
 ## User Preferences
 

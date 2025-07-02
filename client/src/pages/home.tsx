@@ -21,7 +21,7 @@ export default function Home() {
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
 
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak } = useSpeechSynthesis();
+  const { speak, testSpeak } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
 
   // Handle voice commands
@@ -99,6 +99,15 @@ export default function Home() {
         <h1 className="text-white text-sm font-bold mb-0.5">VoicePay</h1>
         <p className="text-gray-400 text-[10px]">Terima Pembayaran dengan QRIS</p>
         
+        {/* Test Speech Icon */}
+        <button
+          onClick={testSpeak}
+          className="absolute top-0 left-2 w-6 h-6 bg-green-700 hover:bg-green-600 rounded-full flex items-center justify-center transition-all duration-200 border border-gray-500"
+          title="Test Suara"
+        >
+          <Mic className="w-3 h-3 text-gray-300" />
+        </button>
+
         {/* Help Icon */}
         <button
           onClick={() => setCurrentMode('help')}
