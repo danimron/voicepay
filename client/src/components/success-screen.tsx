@@ -17,7 +17,7 @@ interface SuccessScreenProps {
 
 export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenProps) {
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak } = useSpeechSynthesis();
+  const { speak, stop } = useSpeechSynthesis();
   const { vibrate } = useVibration();
   const queryClient = useQueryClient();
   const [showCelebration, setShowCelebration] = useState(false);
@@ -132,6 +132,7 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
+        onSpeechStop={stop}
         instructionText="Ucapkan: kembali"
       />
       
