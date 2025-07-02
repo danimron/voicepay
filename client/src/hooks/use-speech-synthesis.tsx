@@ -10,6 +10,7 @@ export interface SpeechSynthesisHook {
 export function useSpeechSynthesis(): SpeechSynthesisHook {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const isSupported = 'speechSynthesis' in window;
+  const isInitialized = useRef(false);
 
   // Debug: check voices available
   useEffect(() => {
@@ -35,14 +36,18 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     }
 
     console.log('Testing speech synthesis...');
+    
+    // Initialize speech synthesis with user interaction
+    isInitialized.current = true;
+    
     const utterance = new SpeechSynthesisUtterance('Test suara Indonesia');
     utterance.lang = 'id-ID';
     utterance.volume = 1;
     utterance.rate = 0.8;
     
-    utterance.onstart = () => console.log('Test speech started');
-    utterance.onend = () => console.log('Test speech ended');
-    utterance.onerror = (e) => console.log('Test speech error:', e.error);
+    utterance.onstart = () => console.log('✓ Test speech started');
+    utterance.onend = () => console.log('✓ Test speech ended');
+    utterance.onerror = (e) => console.log('✗ Test speech error:', e.error);
     
     window.speechSynthesis.speak(utterance);
   }, [isSupported]);
@@ -50,6 +55,12 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
   const speak = useCallback((text: string) => {
     if (!isSupported) {
       console.log('Speech not supported');
+      return;
+    }
+
+    // Only speak if user has initialized speech synthesis first
+    if (!isInitialized.current) {
+      console.log('Speech not initialized. Click green mic button first to enable voice feedback.');
       return;
     }
 
