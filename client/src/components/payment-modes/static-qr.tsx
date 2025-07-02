@@ -30,7 +30,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, []); // No dependencies to prevent re-runs
+  }, [speak]); // Include speak dependency
 
   const handleSimulatePayment = useCallback(() => {
     const randomAmount = Math.floor(Math.random() * 100000) + 10000;

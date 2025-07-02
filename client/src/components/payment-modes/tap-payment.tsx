@@ -102,7 +102,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [phase]);
+  }, [phase, speak]);
 
   return (
     <div className="flex flex-col h-full relative">

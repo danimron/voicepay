@@ -31,7 +31,7 @@ export function TransactionList({ onBack }: TransactionListProps) {
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [transactions?.length]);
+  }, [transactions?.length, speak]);
 
   // Voice command handling
   useEffect(() => {

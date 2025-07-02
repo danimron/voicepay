@@ -87,7 +87,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [phase]);
+  }, [phase, speak]);
 
   const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');

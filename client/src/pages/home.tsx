@@ -63,7 +63,7 @@ export default function Home() {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [currentMode]);
+  }, [currentMode, speak]);
 
   const renderContent = () => {
     switch (currentMode) {
