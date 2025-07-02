@@ -16,7 +16,7 @@ interface TransactionListProps {
 
 export function TransactionList({ onBack }: TransactionListProps) {
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak, stop } = useSpeechSynthesis();
+  const { speak, stop, pause, resume } = useSpeechSynthesis();
 
   const { data: transactions = [], isLoading } = useQuery<Transaction[]>({
     queryKey: ["/api/transactions"],
@@ -93,7 +93,8 @@ export function TransactionList({ onBack }: TransactionListProps) {
           isListening={isListening} 
           onStartListening={startListening}
           onStopListening={stopListening}
-          onSpeechStop={stop}
+          onSpeechStop={pause}
+          onSpeechResume={resume}
           showInstructions={false}
         />
       </div>

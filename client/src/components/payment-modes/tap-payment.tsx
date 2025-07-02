@@ -16,7 +16,7 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
   const [amount, setAmount] = useState('');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak } = useSpeechSynthesis();
+  const { speak, stop, pause, resume } = useSpeechSynthesis();
   const { vibrate } = useVibration();
 
   const handleSimulatePayment = useCallback(() => {

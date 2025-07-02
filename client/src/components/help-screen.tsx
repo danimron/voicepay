@@ -10,7 +10,7 @@ interface HelpScreenProps {
 
 export function HelpScreen({ onBack }: HelpScreenProps) {
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak, stop } = useSpeechSynthesis();
+  const { speak, stop, pause, resume } = useSpeechSynthesis();
 
   useEffect(() => {
     if (!transcript) return;
@@ -35,7 +35,8 @@ export function HelpScreen({ onBack }: HelpScreenProps) {
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
-        onSpeechStop={stop}
+        onSpeechStop={pause}
+        onSpeechResume={resume}
         instructionText="Ucapkan: kembali"
       />
       
