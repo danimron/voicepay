@@ -21,7 +21,7 @@ export default function Home() {
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
 
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak, stop } = useSpeechSynthesis();
+  const { speak, stop, pause, resume } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
 
   // Handle voice commands
@@ -95,7 +95,8 @@ export default function Home() {
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
-        onSpeechStop={stop}
+        onSpeechStop={pause}
+        onSpeechResume={resume}
         instructionText="Ucapkan: static, dynamic, tap, transaksi, atau bantuan"
       />
       

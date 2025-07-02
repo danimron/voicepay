@@ -110,7 +110,8 @@ export function TapPayment({ onBack, onPaymentSuccess }: TapPaymentProps) {
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
-        onSpeechStop={stop}
+        onSpeechStop={pause}
+        onSpeechResume={resume}
         instructionText={phase === 'input' ? "Ucapkan nominal, 'aktif NFC', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       

@@ -18,7 +18,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const { generateDynamicQR } = useQRGenerator();
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak } = useSpeechSynthesis();
+  const { speak, stop, pause, resume } = useSpeechSynthesis();
   const { vibrate } = useVibration();
 
   const handleSimulatePayment = useCallback(() => {
@@ -110,7 +110,8 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
-        onSpeechStop={stop}
+        onSpeechStop={pause}
+        onSpeechResume={resume}
         instructionText={phase === 'input' ? "Ucapkan nominal, 'buat QR', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       
