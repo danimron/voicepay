@@ -108,7 +108,7 @@ This is a React-based smartwatch payment application designed for merchants to a
 - July 01, 2025: Added comprehensive help system - help icon in homepage header, complete FAQ screen with voice commands "bantuan", "help", "panduan"
 - July 01, 2025: Updated QRIS Static with real QR code image provided by user, replacing placeholder text with actual QR image
 - July 01, 2025: Enhanced voice indicator functionality - now shows glare effect only when listening, implemented toggle behavior (click to start/stop), updated all components to use new API
-- July 02, 2025: Fixed voice feedback system - corrected useEffect dependencies for speak function across all components, added error handling and logging to speech synthesis for better debugging
+- July 02, 2025: Fixed voice feedback system - corrected useEffect dependencies for speak function across all components, simplified speech synthesis to avoid browser compatibility issues, removed problematic cancel() calls, switched to English for better reliability
 
 ## User Preferences
 
