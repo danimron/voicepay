@@ -7,6 +7,7 @@ interface VoiceIndicatorProps {
   showInstructions?: boolean;
   instructionText?: string;
   onSpeechStop?: () => void; // Callback to stop current speech when listening starts
+  onSpeechResume?: () => void; // Callback to resume speech when listening stops
 }
 
 export function VoiceIndicator({ 
@@ -15,11 +16,16 @@ export function VoiceIndicator({
   onStopListening,
   showInstructions = true,
   instructionText = "Tekan mic atau ucapkan perintah",
-  onSpeechStop
+  onSpeechStop,
+  onSpeechResume
 }: VoiceIndicatorProps) {
   const handleClick = () => {
     if (isListening && onStopListening) {
       onStopListening();
+      // Resume speech when stopping listening
+      if (onSpeechResume) {
+        onSpeechResume();
+      }
     } else if (!isListening && onStartListening) {
       // Stop any ongoing speech when starting to listen
       if (onSpeechStop) {

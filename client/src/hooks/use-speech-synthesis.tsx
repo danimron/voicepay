@@ -1,15 +1,20 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export interface SpeechSynthesisHook {
   speak: (text: string) => void;
   stop: () => void;
+  pause: () => void;
+  resume: () => void;
   isSupported: boolean;
+  isPaused: boolean;
 }
 
 export function useSpeechSynthesis(): SpeechSynthesisHook {
   const isSupported =
     typeof window !== "undefined" && "speechSynthesis" in window;
   const currentUtterance = useRef<SpeechSynthesisUtterance | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const pausedText = useRef<string>("");
 
   const speak = useCallback(
     (text: string) => {
@@ -20,6 +25,10 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
         if (currentUtterance.current) {
           window.speechSynthesis.cancel();
         }
+
+        // Store text for potential resume
+        pausedText.current = text;
+        setIsPaused(false);
 
         // Create new utterance
         const utterance = new SpeechSynthesisUtterance(text);
@@ -67,14 +76,44 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     try {
       window.speechSynthesis.cancel();
       currentUtterance.current = null;
+      setIsPaused(false);
+      pausedText.current = "";
     } catch (error) {
       // Silent fail
     }
   }, [isSupported]);
 
+  const pause = useCallback(() => {
+    if (!isSupported) return;
+
+    try {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        setIsPaused(true);
+      }
+    } catch (error) {
+      // Silent fail
+    }
+  }, [isSupported]);
+
+  const resume = useCallback(() => {
+    if (!isSupported || !isPaused || !pausedText.current) return;
+
+    try {
+      // Re-speak the paused text
+      const textToResume = pausedText.current;
+      speak(textToResume);
+    } catch (error) {
+      // Silent fail
+    }
+  }, [isSupported, isPaused, speak]);
+
   return {
     speak,
     stop,
+    pause,
+    resume,
     isSupported,
+    isPaused,
   };
 }
