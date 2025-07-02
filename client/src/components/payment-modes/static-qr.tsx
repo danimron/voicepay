@@ -163,6 +163,7 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
               isListening={isListening}
               onStartListening={startListening}
               onStopListening={stopListening}
+              onSpeechStop={stop}
               showInstructions={false}
             />
             

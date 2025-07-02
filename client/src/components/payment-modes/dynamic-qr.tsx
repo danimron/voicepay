@@ -110,6 +110,7 @@ export function DynamicQR({ onBack, onPaymentSuccess }: DynamicQRProps) {
         isListening={isListening}
         onStartListening={startListening}
         onStopListening={stopListening}
+        onSpeechStop={stop}
         instructionText={phase === 'input' ? "Ucapkan nominal, 'buat QR', atau 'kembali'" : "Ucapkan: bayar atau kembali"}
       />
       
