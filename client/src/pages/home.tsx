@@ -51,8 +51,13 @@ export default function Home() {
   };
 
   const goHome = () => {
+    // Clear all states and return to home
+    console.log('goHome called, current mode:', currentMode);
     setCurrentMode('home');
     setPaymentAmount(0);
+    setCurrentPaymentMethod('static'); // Reset payment method
+    stopListening(); // Stop any active voice listening
+    console.log('goHome completed, switching to home');
   };
 
   // Voice feedback for home page

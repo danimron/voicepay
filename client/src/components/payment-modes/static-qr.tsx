@@ -74,15 +74,25 @@ export function StaticQR({ onBack, onPaymentSuccess }: StaticQRProps) {
     
     if (transcript.includes('kembali') || transcript.includes('back') || transcript.includes('home')) {
       stop();
+      stopListening();
       onBack();
       return;
     }
     
     if (transcript.includes('bayar')) {
+      stopListening(); // Stop listening before proceeding to payment
       const randomAmount = Math.floor(Math.random() * 100000) + 10000;
       onPaymentSuccess(randomAmount);
     }
-  }, [transcript, stop, onBack, onPaymentSuccess]);
+  }, [transcript, stop, stopListening, onBack, onPaymentSuccess]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stop();
+      stopListening();
+    };
+  }, [stop, stopListening]);
 
   return (
     <div className="flex flex-col h-full">

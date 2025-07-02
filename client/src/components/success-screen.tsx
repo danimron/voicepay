@@ -68,9 +68,17 @@ export function SuccessScreen({ amount, paymentMethod, onBack }: SuccessScreenPr
   useEffect(() => {
     if (!transcript) return;
     if (transcript.includes('home') || transcript.includes('menu') || transcript.includes('kembali')) {
+      stopListening(); // Stop listening before going back
       onBack();
     }
-  }, [transcript]);
+  }, [transcript, onBack, stopListening]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopListening(); // Stop listening when component unmounts
+    };
+  }, [stopListening]);
 
   // Simplified celebration - just confetti around edges
   const CelebrationParticles = () => (
