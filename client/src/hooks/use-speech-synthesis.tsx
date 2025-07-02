@@ -14,39 +14,40 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     if (!isSupported) return;
 
     try {
-      // Cancel any current speech
-      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
       
-      // Small delay to ensure clean start
-      setTimeout(() => {
-        const utterance = new SpeechSynthesisUtterance(text);
-        
-        // Use Indonesian language like in original working version
-        utterance.lang = 'id-ID';
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 0.8;
+      // Use Indonesian language
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
 
-        utterance.onstart = () => {
-          console.log('Voice feedback:', text);
-        };
+      utterance.onstart = () => {
+        console.log('Voice feedback:', text);
+      };
 
-        utterance.onerror = (event) => {
-          console.warn('Voice feedback error:', event.error);
-        };
+      // Remove error logging to avoid console spam
+      utterance.onerror = () => {
+        // Silent fail - don't log errors
+      };
 
-        utteranceRef.current = utterance;
-        window.speechSynthesis.speak(utterance);
-      }, 100);
+      utteranceRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
       
     } catch (error) {
-      console.warn('Voice feedback failed:', error);
+      // Silent fail
     }
   }, [isSupported]);
 
   const stop = useCallback(() => {
     if (!isSupported) return;
-    window.speechSynthesis.cancel();
+    try {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    } catch (error) {
+      // Silent fail
+    }
   }, [isSupported]);
 
   return {
