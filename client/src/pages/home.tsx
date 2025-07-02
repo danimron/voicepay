@@ -21,7 +21,7 @@ export default function Home() {
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
 
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak, testSpeak } = useSpeechSynthesis();
+  const { speak, enableVoice, isEnabled } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
 
   // Handle voice commands
@@ -101,11 +101,15 @@ export default function Home() {
         
         {/* Enable Voice Feedback Icon */}
         <button
-          onClick={testSpeak}
-          className="absolute top-0 left-2 w-6 h-6 bg-green-700 hover:bg-green-600 rounded-full flex items-center justify-center transition-all duration-200 border border-gray-500"
-          title="Aktifkan Voice Feedback"
+          onClick={enableVoice}
+          className={`absolute top-0 left-2 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 border border-gray-500 ${
+            isEnabled 
+              ? 'bg-green-600 hover:bg-green-500' 
+              : 'bg-green-700 hover:bg-green-600'
+          }`}
+          title={isEnabled ? "Voice Feedback Aktif" : "Aktifkan Voice Feedback"}
         >
-          <Mic className="w-3 h-3 text-gray-300" />
+          <Mic className={`w-3 h-3 ${isEnabled ? 'text-white' : 'text-gray-300'}`} />
         </button>
 
         {/* Help Icon */}

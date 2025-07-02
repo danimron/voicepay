@@ -1,101 +1,91 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 export interface SpeechSynthesisHook {
   speak: (text: string) => void;
   stop: () => void;
   isSupported: boolean;
-  testSpeak: () => void;
+  isEnabled: boolean;
+  enableVoice: () => Promise<boolean>;
 }
 
 export function useSpeechSynthesis(): SpeechSynthesisHook {
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const isSupported = 'speechSynthesis' in window;
-  const isInitialized = useRef(false);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const isSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
-  // Debug: check voices available
-  useEffect(() => {
-    if (isSupported) {
-      const checkVoices = () => {
-        const voices = window.speechSynthesis.getVoices();
-        console.log('Available voices:', voices.length);
-        const indonesianVoices = voices.filter(v => v.lang.includes('id'));
-        console.log('Indonesian voices:', indonesianVoices.length);
-      };
-      
-      checkVoices();
-      window.speechSynthesis.addEventListener('voiceschanged', checkVoices);
-      
-      return () => window.speechSynthesis.removeEventListener('voiceschanged', checkVoices);
-    }
-  }, [isSupported]);
-
-  const testSpeak = useCallback(() => {
+  const enableVoice = useCallback(async (): Promise<boolean> => {
     if (!isSupported) {
       console.log('Speech synthesis not supported');
-      return;
+      return false;
     }
 
-    console.log('Activating voice feedback...');
-    
-    // Initialize speech synthesis with user interaction
-    isInitialized.current = true;
-    
-    // Use simple English text for better compatibility
-    const utterance = new SpeechSynthesisUtterance('Voice feedback activated');
-    utterance.lang = 'en-US'; // Use English for better compatibility
-    utterance.volume = 1;
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    
-    utterance.onstart = () => console.log('✓ Voice feedback is now working');
-    utterance.onend = () => console.log('✓ Voice system ready');
-    utterance.onerror = (e) => console.log('✗ Voice error:', e.error, e.type);
-    
-    window.speechSynthesis.speak(utterance);
-  }, [isSupported]);
+    try {
+      // Test speech to activate voices
+      const test = new SpeechSynthesisUtterance('Voice enabled');
+      test.volume = 0.1; // Very quiet test
+      test.rate = 2; // Very fast test
+      
+      return new Promise((resolve) => {
+        test.onstart = () => {
+          console.log('✓ Voice system activated');
+          setIsEnabled(true);
+          resolve(true);
+        };
+        
+        test.onerror = () => {
+          console.log('✗ Voice activation failed');
+          resolve(false);
+        };
+        
+        test.onend = () => {
+          if (!isEnabled) {
+            setIsEnabled(true);
+            resolve(true);
+          }
+        };
+        
+        window.speechSynthesis.speak(test);
+        
+        // Fallback timeout
+        setTimeout(() => {
+          if (!isEnabled) {
+            console.log('✓ Voice activated (fallback)');
+            setIsEnabled(true);
+            resolve(true);
+          }
+        }, 1000);
+      });
+    } catch (error) {
+      console.log('Voice activation error:', error);
+      return false;
+    }
+  }, [isSupported, isEnabled]);
 
   const speak = useCallback((text: string) => {
-    if (!isSupported) {
-      console.log('Speech not supported');
+    if (!isSupported) return;
+    if (!isEnabled) {
+      console.log('Voice not enabled. Click green button first.');
       return;
     }
 
-    // Only speak if user has initialized speech synthesis first
-    if (!isInitialized.current) {
-      console.log('Speech not initialized. Click green mic button first to enable voice feedback.');
-      return;
+    try {
+      // Clear any existing speech
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.volume = 0.8;
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.log('Speech error:', error);
     }
-
-    console.log('Attempting to speak:', text);
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // Use English for better compatibility
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1; // Max volume
-
-    utterance.onstart = () => {
-      console.log('✓ Speech started:', text);
-    };
-
-    utterance.onend = () => {
-      console.log('✓ Speech ended');
-    };
-
-    utterance.onerror = (event) => {
-      console.log('✗ Speech error:', event.error);
-    };
-
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, [isSupported]);
+  }, [isSupported, isEnabled]);
 
   const stop = useCallback(() => {
     if (!isSupported) return;
     try {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
+      window.speechSynthesis.cancel();
     } catch (error) {
       // Silent fail
     }
@@ -105,6 +95,7 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     speak,
     stop,
     isSupported,
-    testSpeak
+    isEnabled,
+    enableVoice
   };
 }
