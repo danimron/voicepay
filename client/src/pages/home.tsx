@@ -21,7 +21,7 @@ export default function Home() {
   const [currentPaymentMethod, setCurrentPaymentMethod] = useState<'static' | 'dynamic' | 'tap'>('static');
 
   const { isListening, startListening, stopListening, transcript } = useVoiceCommand();
-  const { speak, enableVoice, isEnabled } = useSpeechSynthesis();
+  const { speak } = useSpeechSynthesis();
   const isSmartwatch = useIsSmartwatch();
 
   // Handle voice commands
@@ -55,17 +55,7 @@ export default function Home() {
     setPaymentAmount(0);
   };
 
-  // Voice feedback for home page
-  useEffect(() => {
-    if (currentMode === 'home') {
-      const timer = setTimeout(() => {
-        if (speak) {
-          speak('Choose payment method. Say static, dynamic, tap, or transactions to view history.');
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [currentMode, speak]);
+  // Voice feedback disabled
 
   const renderContent = () => {
     switch (currentMode) {
@@ -99,19 +89,6 @@ export default function Home() {
         <h1 className="text-white text-sm font-bold mb-0.5">VoicePay</h1>
         <p className="text-gray-400 text-[10px]">Terima Pembayaran dengan QRIS</p>
         
-        {/* Enable Voice Feedback Icon */}
-        <button
-          onClick={enableVoice}
-          className={`absolute top-0 left-2 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 border border-gray-500 ${
-            isEnabled 
-              ? 'bg-green-600 hover:bg-green-500' 
-              : 'bg-green-700 hover:bg-green-600'
-          }`}
-          title={isEnabled ? "Voice Feedback Aktif" : "Aktifkan Voice Feedback"}
-        >
-          <Mic className={`w-3 h-3 ${isEnabled ? 'text-white' : 'text-gray-300'}`} />
-        </button>
-
         {/* Help Icon */}
         <button
           onClick={() => setCurrentMode('help')}
