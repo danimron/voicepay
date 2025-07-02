@@ -55,7 +55,15 @@ export default function Home() {
     setPaymentAmount(0);
   };
 
-  // Voice feedback disabled
+  // Voice feedback for home page
+  useEffect(() => {
+    if (currentMode === 'home') {
+      const timer = setTimeout(() => {
+        speak('Pilih metode pembayaran. Ucapkan static, dynamic, tap, atau transaksi untuk melihat riwayat.');
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [currentMode, speak]);
 
   const renderContent = () => {
     switch (currentMode) {
