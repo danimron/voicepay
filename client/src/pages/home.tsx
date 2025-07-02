@@ -60,7 +60,7 @@ export default function Home() {
     if (currentMode === 'home') {
       const timer = setTimeout(() => {
         if (speak) {
-          speak('Pilih metode pembayaran. Ucapkan static, dynamic, tap, atau transaksi untuk melihat riwayat.');
+          speak('Choose payment method. Say static, dynamic, tap, or transactions to view history.');
         }
       }, 500);
       return () => clearTimeout(timer);

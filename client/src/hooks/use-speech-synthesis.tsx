@@ -35,19 +35,21 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
       return;
     }
 
-    console.log('Testing speech synthesis...');
+    console.log('Activating voice feedback...');
     
     // Initialize speech synthesis with user interaction
     isInitialized.current = true;
     
-    const utterance = new SpeechSynthesisUtterance('Test suara Indonesia');
-    utterance.lang = 'id-ID';
+    // Use simple English text for better compatibility
+    const utterance = new SpeechSynthesisUtterance('Voice feedback activated');
+    utterance.lang = 'en-US'; // Use English for better compatibility
     utterance.volume = 1;
-    utterance.rate = 0.8;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
     
-    utterance.onstart = () => console.log('✓ Test speech started');
-    utterance.onend = () => console.log('✓ Test speech ended');
-    utterance.onerror = (e) => console.log('✗ Test speech error:', e.error);
+    utterance.onstart = () => console.log('✓ Voice feedback is now working');
+    utterance.onend = () => console.log('✓ Voice system ready');
+    utterance.onerror = (e) => console.log('✗ Voice error:', e.error, e.type);
     
     window.speechSynthesis.speak(utterance);
   }, [isSupported]);
@@ -67,7 +69,7 @@ export function useSpeechSynthesis(): SpeechSynthesisHook {
     console.log('Attempting to speak:', text);
     
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'id-ID';
+    utterance.lang = 'en-US'; // Use English for better compatibility
     utterance.rate = 0.9;
     utterance.pitch = 1;
     utterance.volume = 1; // Max volume
