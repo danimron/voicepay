@@ -60,11 +60,6 @@ The application includes dummy data and simulated payment flows for demonstratio
 3. Add actual NFC payment processing
 4. Set up webhook handlers for payment confirmations
 
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 👥 Contributors
 
 - **Anton Rifco Susilo** 
